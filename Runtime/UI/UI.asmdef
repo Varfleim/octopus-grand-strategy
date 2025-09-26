@@ -1,0 +1,20 @@
+{
+    "name": "UI",
+    "rootNamespace": "GS.UI",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:e59bf9fc7d5a44b18a819a92edd46163",
+        "GUID:f5f01a091e0d746659b4380253d52f4e",
+        "GUID:de6c4adc3aaac4bb09212ed7b9ba2781",
+        "GUID:aa3daa4c9113b5247acaf9f2d9948b45"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
