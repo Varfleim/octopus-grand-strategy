@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 using UnityEngine;
 
 using TMPro;
@@ -9,6 +11,7 @@ namespace GS.UI
     {
         public TextMeshProUGUI objectName;
 
+        public Dictionary<string, UIA_ObjectSubpanel> objectSubpanels = new();
         public UIA_ObjectSubpanel activeSubpanel;
 
         public void HideActiveSubpanel()
