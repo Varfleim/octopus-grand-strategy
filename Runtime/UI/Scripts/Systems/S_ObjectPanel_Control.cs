@@ -4,32 +4,32 @@ using Leopotam.EcsLite.Di;
 
 namespace GS.UI
 {
-    public class SObjectPanelControl : IEcsRunSystem
+    public class S_ObjectPanel_Control : IEcsRunSystem
     {
         readonly EcsCustomInject<UI_Core> uICore = default;
 
         public void Run(IEcsSystems systems)
         {
             //Отображаем вкладку подпанели объекта
-            ShowObjectSubpanelTab();
+            ObjectSubpanelTabs_Show();
 
             //Скрываем панель объекта
-            HideObjectPanel();
+            ObjectPanels_Hide();
         }
 
-        readonly EcsFilterInject<Inc<R_ObjectSubpanelTabShow>> objectSubpanelTabShowRFilter = default;
-        readonly EcsPoolInject<R_ObjectSubpanelTabShow> objectSubpanelTabShowRPool = default;
-        readonly EcsPoolInject<R_ObjectSubpanelTabUpdate> objectSubpanelTabUpdateRPool = default;
-        void ShowObjectSubpanelTab()
+        readonly EcsFilterInject<Inc<R_ObjectSubpanelTab_Show>> objectSubpanelTabShowRFilter = default;
+        readonly EcsPoolInject<R_ObjectSubpanelTab_Show> objectSubpanelTabShowRPool = default;
+        readonly EcsPoolInject<R_ObjectSubpanelTab_Update> objectSubpanelTabUpdateRPool = default;
+        void ObjectSubpanelTabs_Show()
         {
             //Для каждого запроса отображения вкладки подпанели объекта
             foreach(int requestEntity in objectSubpanelTabShowRFilter.Value)
             {
                 //Берём запрос
-                ref R_ObjectSubpanelTabShow requestComp = ref objectSubpanelTabShowRPool.Value.Get(requestEntity);
+                ref R_ObjectSubpanelTab_Show requestComp = ref objectSubpanelTabShowRPool.Value.Get(requestEntity);
 
                 //Отображаем вкладку
-                ObjectSubpanelTabShow(
+                ObjectSubpanelTab_Show(
                     ref requestComp,
                     out bool isSamePanel,
                     out bool isSameSubpanel,
@@ -37,7 +37,7 @@ namespace GS.UI
                     out bool isSameObject);
 
                 //Запрашиваем обновление данных во вкладке
-                UIData.UpdateObjectSubpanelTabRequest(
+                UIData.ObjectSubpanelTab_UpdateRequest(
                     objectSubpanelTabUpdateRPool.Value,
                     requestEntity,
                     isSamePanel,
@@ -55,8 +55,8 @@ namespace GS.UI
         /// <param name="isSameSubpanel"></param>
         /// <param name="isSameTab"></param>
         /// <param name="isSameObject"></param>
-        void ObjectSubpanelTabShow(
-            ref R_ObjectSubpanelTabShow requestComp,
+        void ObjectSubpanelTab_Show(
+            ref R_ObjectSubpanelTab_Show requestComp,
             out bool isSamePanel,
             out bool isSameSubpanel,
             out bool isSameTab,
@@ -66,7 +66,7 @@ namespace GS.UI
             UIA_ObjectSubpanel objectSubpanel = uICore.Value.gameWindow.objectPanel.objectSubpanels[requestComp.objectSubpanelType];
 
             //Активируем подпанель, если необходимо
-            ObjectSubpanelShow(
+            ObjectSubpanel_Show(
                 objectSubpanel,
                 out isSamePanel,
                 out isSameSubpanel);
@@ -162,7 +162,7 @@ namespace GS.UI
         /// <param name="requestedSubpanel"></param>
         /// <param name="isSamePanel"></param>
         /// <param name="isSameSubpanel"></param>
-        void ObjectSubpanelShow(
+        void ObjectSubpanel_Show(
             UIA_ObjectSubpanel requestedSubpanel,
             out bool isSamePanel,
             out bool isSameSubpanel)
@@ -225,31 +225,31 @@ namespace GS.UI
             }
         }
 
-        readonly EcsFilterInject<Inc<R_ObjectPanelHide>> objectPanelHideRFilter = default;
-        readonly EcsPoolInject<R_ObjectPanelHide> objectPanelHideRPool = default;
-        void HideObjectPanel()
+        readonly EcsFilterInject<Inc<R_ObjectPanel_Hide>> objectPanelHideRFilter = default;
+        readonly EcsPoolInject<R_ObjectPanel_Hide> objectPanelHideRPool = default;
+        void ObjectPanels_Hide()
         {
             //Для каждого запроса сокрытия панели объекта
             foreach(int requestEntity in objectPanelHideRFilter.Value)
             {
                 //Берём запрос
-                ref R_ObjectPanelHide requestComp = ref objectPanelHideRPool.Value.Get(requestEntity);
+                ref R_ObjectPanel_Hide requestComp = ref objectPanelHideRPool.Value.Get(requestEntity);
 
                 //Скрываем панель
-                ObjectPanelHide();
+                ObjectPanel_Hide();
 
                 //Удаляем запрос
                 objectPanelHideRPool.Value.Del(requestEntity);
             }
         }
 
-        void ObjectPanelHide()
+        void ObjectPanel_Hide()
         {
             //Берём панель объекта
             UI_ObjectPanel objectPanel = uICore.Value.gameWindow.objectPanel;
 
             //Скрываем активную вкладку активной подпанели
-            objectPanel.activeSubpanel.HideActiveTab();
+            objectPanel.activeSubpanel.ActiveTab_Hide();
 
             //Скрываем активную подпанель
             objectPanel.HideActiveSubpanel();

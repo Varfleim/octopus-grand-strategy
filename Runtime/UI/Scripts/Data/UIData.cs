@@ -7,27 +7,27 @@ namespace GS.UI
 {
     public class UIData : MonoBehaviour
     {
-        public static void HideObjectPanelRequest(
+        public static void ObjectPanel_HideRequest(
             EcsWorld world,
-            EcsPool<R_ObjectPanelHide> requestPool)
+            EcsPool<R_ObjectPanel_Hide> requestPool)
         {
             //Создаём новую сущность и назначаем ей запрос
             int requestEntity = world.NewEntity();
-            ref R_ObjectPanelHide requestComp = ref requestPool.Add(requestEntity);
+            ref R_ObjectPanel_Hide requestComp = ref requestPool.Add(requestEntity);
 
             //Заполняем данные запроса
             requestComp = new(0);
         }
 
-        public static void ShowObjectSubpanelTabRequest(
+        public static void ObjectSubpanelTab_ShowRequest(
             EcsWorld world,
-            EcsPool<R_ObjectSubpanelTabShow> requestPool,
+            EcsPool<R_ObjectSubpanelTab_Show> requestPool,
             string objectSubpanelType, string objectSubpanelTabType,
             EcsPackedEntity objectPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int requestEntity = world.NewEntity();
-            ref R_ObjectSubpanelTabShow requestComp = ref requestPool.Add(requestEntity);
+            ref R_ObjectSubpanelTab_Show requestComp = ref requestPool.Add(requestEntity);
 
             //Заполняем данные запроса
             requestComp = new(
@@ -35,8 +35,8 @@ namespace GS.UI
                 objectPE);
         }
 
-        public static void UpdateObjectSubpanelTabRequest(
-            EcsPool<R_ObjectSubpanelTabUpdate> requestPool,
+        public static void ObjectSubpanelTab_UpdateRequest(
+            EcsPool<R_ObjectSubpanelTab_Update> requestPool,
             int requestEntity,
             bool isSamePanel,
             bool isSameSubpanel,
@@ -44,7 +44,7 @@ namespace GS.UI
             bool isSameObject)
         {
             //Назначаем сущности запрос
-            ref R_ObjectSubpanelTabUpdate requestComp = ref requestPool.Add(requestEntity);
+            ref R_ObjectSubpanelTab_Update requestComp = ref requestPool.Add(requestEntity);
 
             //Заполняем данные запроса
             requestComp = new(
@@ -54,15 +54,15 @@ namespace GS.UI
                 isSameObject);
         }
 
-        public static void ShowObjectMapPanelRequest(
+        public static void ObjectMapPanel_ShowRequest(
             EcsWorld world,
-            EcsPool<R_ObjectMapPanelShow> requestPool,
+            EcsPool<R_ObjectMapPanel_Show> requestPool,
             string objectMapPanelType,
             EcsPackedEntity objectPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int requestEntity = world.NewEntity();
-            ref R_ObjectMapPanelShow requestComp = ref requestPool.Add(requestEntity);
+            ref R_ObjectMapPanel_Show requestComp = ref requestPool.Add(requestEntity);
 
             //Заполняем данные запроса
             requestComp = new(
@@ -70,15 +70,15 @@ namespace GS.UI
                 objectPE);
         }
 
-        public static void HideObjectMapPanelRequest(
+        public static void ObjectMapPanel_HideRequest(
             EcsWorld world,
-            EcsPool<R_ObjectMapPanelHide> requestPool,
+            EcsPool<R_ObjectMapPanel_Hide> requestPool,
             string objectMapPanelType,
             EcsPackedEntity objectPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int requestEntity = world.NewEntity();
-            ref R_ObjectMapPanelHide requestComp = ref requestPool.Add(requestEntity);
+            ref R_ObjectMapPanel_Hide requestComp = ref requestPool.Add(requestEntity);
 
             //Заполняем данные запроса
             requestComp = new(

@@ -17,22 +17,22 @@ namespace GS.UI
             //Добавляем покадровые системы
             #region Frame
             //Ввод в панели объекта
-            startup.AddFrameSystem(new SObjectPanelInput());
+            startup.AddFrameSystem(new S_ObjectPanel_Input());
             #endregion
 
             //Добавляем системы рендеринга
             #region PreRender
             //Отображение панели объекта
-            startup.AddPreRenderSystem(new SObjectPanelControl());
+            startup.AddPreRenderSystem(new S_ObjectPanel_Control());
 
             //Отображение панелей карты объектов
-            startup.AddPreRenderSystem(new SObjectMapPanelControl());
+            startup.AddPreRenderSystem(new S_ObjectMapPanel_Control());
             #endregion
 
             //Добавляем потиковые системы
             #region PostTick
             //Обновление панелей в окне игры в конце каждого тика
-            startup.AddPostTickSystem(new SGameWindowTickUpdate());
+            startup.AddPostTickSystem(new S_GameWindow_TickUpdate());
             #endregion
         }
 

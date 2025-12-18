@@ -13,22 +13,19 @@ namespace GS.UI
             {
                 return selfType;
             }
+            set
+            {
+                selfType = value;
+            }
         }
         string selfType;
 
-        public Dictionary<string, UIA_ObjectSubpanelTab> subpanelTabs = new();
-
         public TabGroup tabGroup;
 
+        public Dictionary<string, UIA_ObjectSubpanelTab> subpanelTabs = new();
         public UIA_ObjectSubpanelTab activeTab;
 
-        public void SetSelfType(
-            string selfType)
-        {
-            this.selfType = selfType;
-        }
-
-        public void HideActiveTab()
+        public void ActiveTab_Hide()
         {
             //Скрываем активную вкладку
             activeTab.gameObject.SetActive(false);

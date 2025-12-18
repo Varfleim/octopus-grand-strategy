@@ -5,7 +5,7 @@ using Leopotam.EcsLite.Unity.Ugui;
 
 namespace GS.UI
 {
-    public class SObjectPanelInput : IEcsInitSystem, IEcsRunSystem
+    public class S_ObjectPanel_Input : IEcsInitSystem, IEcsRunSystem
     {
         readonly EcsWorldInject world = default;
 
@@ -28,11 +28,11 @@ namespace GS.UI
         public void Run(IEcsSystems systems)
         {
             //Проверяем клики в панели объекта
-            ObjectPanelClickAction();
+            ObjectPanel_ClickAction();
         }
 
-        readonly EcsPoolInject<R_ObjectPanelHide> objectPanelHideRPool = default;
-        void ObjectPanelClickAction()
+        readonly EcsPoolInject<R_ObjectPanel_Hide> objectPanelHideRPool = default;
+        void ObjectPanel_ClickAction()
         {
             //Берём окно игры
             UI_GameWindow gameWindow = uICore.Value.gameWindow;
@@ -53,7 +53,7 @@ namespace GS.UI
                     if (clickEvent.WidgetName == "CloseObjectPanel")
                     {
                         //Запрашиваем сокрытие панели объекта
-                        UIData.HideObjectPanelRequest(
+                        UIData.ObjectPanel_HideRequest(
                             world.Value,
                             objectPanelHideRPool.Value);
 

@@ -16,7 +16,7 @@ namespace GS.UI
 
         public EcsPackedEntity parentProvincePE;
 
-        public static void CachePanel(
+        public static void Panel_Cache(
             ref C_ObjectDisplayedMapPanels objectDisplayedMapPanels,
             string objectMapPanelType)
         {
@@ -34,7 +34,7 @@ namespace GS.UI
             objectDisplayedMapPanels.objectMapPanels.Remove(objectMapPanelType);
         }
 
-        public static void InstantiatePanel(
+        public static void Panel_Instantiate(
             EcsPackedEntity objectPE,
             ref C_ObjectDisplayedMapPanels objectDisplayedMapPanels,
             string objectMapPanelType)
@@ -61,7 +61,7 @@ namespace GS.UI
             }
 
             //Обновляем основные данные панели
-            currentObjectMapPanel.UpdatePanel(objectPE);
+            currentObjectMapPanel.Panel_Update(objectPE);
             currentObjectMapPanel.parentProvincePE = new();
 
             //Отображаем новую панель
@@ -71,7 +71,7 @@ namespace GS.UI
             objectDisplayedMapPanels.objectMapPanels.Add(objectMapPanelType, currentObjectMapPanel);
         }
 
-        public void UpdatePanel(
+        public void Panel_Update(
             EcsPackedEntity objectPE)
         {
             selfPE = objectPE;

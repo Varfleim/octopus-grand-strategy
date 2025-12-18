@@ -1,9 +1,9 @@
 
 namespace GS.UI
 {
-    public readonly struct R_ObjectSubpanelTabUpdate
+    public readonly struct R_ObjectSubpanelTab_Update
     {
-        public R_ObjectSubpanelTabUpdate(
+        public R_ObjectSubpanelTab_Update(
             bool isSamePanel, 
             bool isSameSubpanel, 
             bool isSameTab, 

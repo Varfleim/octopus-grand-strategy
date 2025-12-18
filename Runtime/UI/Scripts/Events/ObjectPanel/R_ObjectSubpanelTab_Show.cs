@@ -3,9 +3,9 @@ using Leopotam.EcsLite;
 
 namespace GS.UI
 {
-    public readonly struct R_ObjectSubpanelTabShow
+    public readonly struct R_ObjectSubpanelTab_Show
     {
-        public R_ObjectSubpanelTabShow(
+        public R_ObjectSubpanelTab_Show(
             string objectSubpanelType, string objectSubpanelTabType,
             EcsPackedEntity objectPE)
         {
