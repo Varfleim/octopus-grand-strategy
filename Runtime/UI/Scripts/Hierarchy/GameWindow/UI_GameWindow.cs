@@ -9,7 +9,7 @@ namespace GS.UI
 
         public UI_ObjectPanel objectPanel;
 
-        public void HideMainPanel()
+        public void MainPanel_Hide()
         {
             //Скрываем активную главную панель
             activeMainPanel.SetActive(false);
@@ -18,7 +18,7 @@ namespace GS.UI
             activeMainPanel = null;
         }
 
-        public void MainPanelActivation(
+        public void MainPanel_Activation(
             GameObject requestedPanel,
             out bool isSamePanel)
         {

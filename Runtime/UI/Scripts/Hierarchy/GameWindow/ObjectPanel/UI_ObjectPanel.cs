@@ -14,7 +14,7 @@ namespace GS.UI
         public Dictionary<string, UIA_ObjectSubpanel> objectSubpanels = new();
         public UIA_ObjectSubpanel activeSubpanel;
 
-        public void HideActiveSubpanel()
+        public void ActiveSubpanel_Hide()
         {
             //Скрываем активную подпанель
             activeSubpanel.gameObject.SetActive(false);

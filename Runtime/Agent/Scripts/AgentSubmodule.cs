@@ -10,23 +10,23 @@ namespace GS.Agent
         [SerializeField]
         private AgentData agentData;
 
-        public override void AddSystems(GameStartup startup)
+        public override void Systems_Add(GameStartup startup)
         {
             //Добавляем системы инициализации
             #region PreInit
             //Создание агентов по запросу
-            startup.AddPreInitSystem(new SAgentCreation());
+            startup.PreInitSystem_Add(new SAgentCreation());
             #endregion
             #region PostInit
             //Очистка событий
-            startup.AddPostInitSystem(new SEventsClear());
+            startup.PostInitSystem_Add(new SEventsClear());
             #endregion
         }
 
-        public override void InjectData(GameStartup startup)
+        public override void Data_Inject(GameStartup startup)
         {
             //Вводим данные
-            startup.InjectData(agentData);
+            startup.Data_Inject(agentData);
         }
     }
 }

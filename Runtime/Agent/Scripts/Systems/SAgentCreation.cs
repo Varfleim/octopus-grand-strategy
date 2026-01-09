@@ -96,7 +96,7 @@ namespace GS.Agent
             agentData.Value.agentUniqueColors.Add(agentColor, agent.selfPE);
         }
 
-        readonly EcsPoolInject<GBB.Map.Render.R_MapModeUpdateColorsListFirst> mapModeUpdateColorsListFirstRPool = default;
+        readonly EcsPoolInject<GBB.Map.Render.R_MapMode_UpdateColorsListFirst> mapModeUpdateColorsListFirstRPool = default;
         void AgentColorListsUpdate()
         {
             //Очищаем списки
@@ -123,7 +123,7 @@ namespace GS.Agent
             }
 
             //Запрашиваем первичное обновление списка цветов режима карты
-            GBB.Map.Render.MainMapModeData.MapModeUpdateColorsListFirstRequest(
+            GBB.Map.Render.MainMapMode_Data.MapMode_UpdateColorsListFirst_Request(
                 world.Value,
                 mapModeUpdateColorsListFirstRPool.Value,
                 agentData.Value.AgentObjectType,

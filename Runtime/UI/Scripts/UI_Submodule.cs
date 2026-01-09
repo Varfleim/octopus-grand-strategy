@@ -5,44 +5,44 @@ using GBB;
 
 namespace GS.UI
 {
-    public class UISubmodule : GameSubmodule
+    public class UI_Submodule : GameSubmodule
     {
         [SerializeField]
-        private UIData uIData;
+        private UI_Data uI_Data;
         [SerializeField]
-        private UI_Core uICore;
+        private UI_Core uI_Core;
 
-        public override void AddSystems(GameStartup startup)
+        public override void Systems_Add(GameStartup startup)
         {
             //Добавляем покадровые системы
             #region Frame
             //Ввод в панели объекта
-            startup.AddFrameSystem(new S_ObjectPanel_Input());
+            startup.FrameSystem_Add(new S_ObjectPanel_Input());
             #endregion
 
             //Добавляем системы рендеринга
             #region PreRender
             //Отображение панели объекта
-            startup.AddPreRenderSystem(new S_ObjectPanel_Control());
+            startup.PreRenderSystem_Add(new S_ObjectPanel_Control());
 
             //Отображение панелей карты объектов
-            startup.AddPreRenderSystem(new S_ObjectMapPanel_Control());
+            startup.PreRenderSystem_Add(new S_ObjectMapPanel_Control());
             #endregion
 
             //Добавляем потиковые системы
             #region PostTick
             //Обновление панелей в окне игры в конце каждого тика
-            startup.AddPostTickSystem(new S_GameWindow_TickUpdate());
+            startup.PostTickSystem_Add(new S_GameWindow_TickUpdate());
             #endregion
         }
 
-        public override void InjectData(GameStartup startup)
+        public override void Data_Inject(GameStartup startup)
         {
             //Вводим данные
-            startup.InjectData(uIData);
+            startup.Data_Inject(uI_Data);
 
             //Вводим данные
-            startup.InjectData(uICore);
+            startup.Data_Inject(uI_Core);
         }
     }
 }

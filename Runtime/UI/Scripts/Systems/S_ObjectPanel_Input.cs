@@ -11,18 +11,18 @@ namespace GS.UI
 
 
         EcsWorld uguiUIWorld;
-        EcsFilter clickEventUIFilter;
-        EcsPool<EcsUguiClickEvent> clickEventUIPool;
+        EcsFilter clickEventUI_F;
+        EcsPool<EcsUguiClickEvent> clickEventUI_P;
 
 
-        readonly EcsCustomInject<UI_Core> uICore = default;
+        readonly EcsCustomInject<UI_Core> uI_Core = default;
 
         public void Init(IEcsSystems systems)
         {
             uguiUIWorld = systems.GetWorld("uguiUIEventsWorld");
 
-            clickEventUIPool = uguiUIWorld.GetPool<EcsUguiClickEvent>();
-            clickEventUIFilter = uguiUIWorld.Filter<EcsUguiClickEvent>().End();
+            clickEventUI_P = uguiUIWorld.GetPool<EcsUguiClickEvent>();
+            clickEventUI_F = uguiUIWorld.Filter<EcsUguiClickEvent>().End();
         }
 
         public void Run(IEcsSystems systems)
@@ -31,20 +31,20 @@ namespace GS.UI
             ObjectPanel_ClickAction();
         }
 
-        readonly EcsPoolInject<R_ObjectPanel_Hide> objectPanelHideRPool = default;
+        readonly EcsPoolInject<R_ObjectPanel_Hide> objectPanel_Hide_R_P = default;
         void ObjectPanel_ClickAction()
         {
             //Берём окно игры
-            UI_GameWindow gameWindow = uICore.Value.gameWindow;
+            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
 
             //Если активна панель объекта
             if (gameWindow.activeMainPanel == gameWindow.objectPanel.gameObject)
             {
                 //Для каждого события клика по интерфейсу
-                foreach (int clickEventUIEntity in clickEventUIFilter)
+                foreach (int clickEventUIEntity in clickEventUI_F)
                 {
                     //Берём событие
-                    ref EcsUguiClickEvent clickEvent = ref clickEventUIPool.Get(clickEventUIEntity);
+                    ref EcsUguiClickEvent clickEvent = ref clickEventUI_P.Get(clickEventUIEntity);
 
                     //Проверяем, было ли совершено какое-либо действие
                     bool isActionComplete = false;
@@ -53,9 +53,9 @@ namespace GS.UI
                     if (clickEvent.WidgetName == "CloseObjectPanel")
                     {
                         //Запрашиваем сокрытие панели объекта
-                        UIData.ObjectPanel_HideRequest(
+                        UI_Data.ObjectPanel_Hide_R(
                             world.Value,
-                            objectPanelHideRPool.Value);
+                            objectPanel_Hide_R_P.Value);
 
                         //Отмечаем, что действие было совершено
                         isActionComplete = true;
@@ -74,7 +74,7 @@ namespace GS.UI
                         UnityEngine.Debug.LogWarning("Click! " + clickEvent.WidgetName);
 
                         //Удаляем событие
-                        clickEventUIPool.Del(clickEventUIEntity);
+                        clickEventUI_P.Del(clickEventUIEntity);
                     }
                 }
             }
