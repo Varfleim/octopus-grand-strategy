@@ -18,6 +18,8 @@ namespace GS.UI
             OPs_Events_Clear();
         }
 
+        readonly EcsFilterInject<Inc<R_OutlinerPanel_Hide>> outlinerP_Hide_R_F = default;
+        readonly EcsPoolInject<R_OutlinerPanel_Hide> outlinerP_Hide_R_P = default;
         readonly EcsFilterInject<Inc<R_OutlinerPanelTab_Show>> outlinerPT_Show_R_F = default;
         readonly EcsPoolInject<R_OutlinerPanelTab_Show> outlinerPT_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_OutlinerPanelTab_Update>> outlinerPT_Update_R_F = default;
@@ -28,10 +30,19 @@ namespace GS.UI
         {
             //Очищаем события, которые не были удалены в GameUI
 
+            //Для каждого запроса сокрытия панели планировщика
+            foreach(int rEntity in outlinerP_Hide_R_F.Value)
+            {
+                UnityEngine.Debug.LogWarning("OutlinerPanel Hide!");
+
+                outlinerP_Hide_R_P.Value.Del(rEntity);
+            }
+
             //Для каждого запроса отображения вкладки панели планировщика
             foreach(int rEntity in outlinerPT_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("OutlinerPT Show!");
+
                 outlinerPT_Show_R_P.Value.Del(rEntity);
             }
 
@@ -40,18 +51,20 @@ namespace GS.UI
             {
                 UnityEngine.Debug.LogWarning("OutlinerPT Update!");
 
-                //Удаляем компонент запроса
                 outlinerPT_Update_R_P.Value.Del(rEntity);
             }
 
             //Для каждого запроса отображения панели объекта в планировщике
             foreach(int rEntity in outlinerOP_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("ObjectOutlinerPanel Show!");
+
                 outlinerOP_Show_R_P.Value.Del(rEntity);
             }
         }
 
+        readonly EcsFilterInject<Inc<R_MainOverviewPanel_Hide>> mOP_Hide_R_F = default;
+        readonly EcsPoolInject<R_MainOverviewPanel_Hide> mOP_Hide_R_P = default;
         readonly EcsFilterInject<Inc<R_MainOverviewSubpanelTab_Show>> mOPSbpT_Show_R_F = default;
         readonly EcsPoolInject<R_MainOverviewSubpanelTab_Show> mOPSbpT_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_MainOverviewSubpanelTab_Update>> mOPSbpT_Update_R_F = default;
@@ -62,10 +75,19 @@ namespace GS.UI
         {
             //Очищаем события, которые не были удалены в GameUI
 
+            //Для каждого запроса сокрытия главной обзорной панели
+            foreach (int rEntity in mOP_Hide_R_F.Value)
+            {
+                UnityEngine.Debug.LogWarning("MainOverviewPanel Hide!");
+
+                mOP_Hide_R_P.Value.Del(rEntity);
+            }
+
             //Для каждого запроса отображения вкладки главной обзорной панели
             foreach (int rEntity in mOPSbpT_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("MOSbpT Show!");
+
                 mOPSbpT_Show_R_P.Value.Del(rEntity);
             }
 
@@ -74,14 +96,14 @@ namespace GS.UI
             {
                 UnityEngine.Debug.LogWarning("MOSbpT Update!");
 
-                //Удаляем компонент запроса
                 mOPSbpT_Update_R_P.Value.Del(rEntity);
             }
 
             //Для каждого запроса отображения панели объекта в главной обзорной панели
             foreach (int rEntity in mOOP_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("ObjectMainOverviewPanel Hide!");
+
                 mOOP_Show_R_P.Value.Del(rEntity);
             }
         }
@@ -90,10 +112,15 @@ namespace GS.UI
         readonly EcsPoolInject<R_ObjectScreenPanel_Show> oSP_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_ObjectScreenPanel_Update>> oSP_Update_R_F = default;
         readonly EcsPoolInject<R_ObjectScreenPanel_Update> oSP_Update_R_P = default;
+        readonly EcsFilterInject<Inc<R_ObjectScreenPanel_Hide>> oSP_Hide_R_F = default;
+        readonly EcsPoolInject<R_ObjectScreenPanel_Hide> oSP_Hide_R_P = default;
+
         readonly EcsFilterInject<Inc<R_ObjectMapPanel_Show>> oMP_Show_R_F = default;
         readonly EcsPoolInject<R_ObjectMapPanel_Show> oMP_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_ObjectScreenPanel_Update>> oMP_Update_R_F = default;
         readonly EcsPoolInject<R_ObjectScreenPanel_Update> oMP_Update_R_P = default;
+        readonly EcsFilterInject<Inc<R_ObjectMapPanel_Hide>> oMP_Hide_R_F = default;
+        readonly EcsPoolInject<R_ObjectMapPanel_Hide> oMP_Hide_R_P = default;
         void OPs_Events_Clear()
         {
             //Очищаем события, которые не были удалены в GameUI
@@ -101,7 +128,8 @@ namespace GS.UI
             //Для каждого запроса отображения экранной панели объекта
             foreach(int rEntity in oSP_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("OSP Show!");
+
                 oSP_Show_R_P.Value.Del(rEntity);
             }
 
@@ -110,14 +138,22 @@ namespace GS.UI
             {
                 UnityEngine.Debug.LogWarning("OSP Update!");
 
-                //Удаляем компонент запроса
                 oSP_Update_R_P.Value.Del(rEntity);
+            }
+
+            //Для каждого запроса сокрытия экранной панели объекта
+            foreach(int rEntity in oSP_Hide_R_F.Value)
+            {
+                UnityEngine.Debug.LogWarning("OSP Hide!");
+
+                oSP_Hide_R_P.Value.Del(rEntity);
             }
 
             //Для каждого запроса отображения панели карты объекта
             foreach (int rEntity in oMP_Show_R_F.Value)
             {
-                //Удаляем компонент запроса
+                UnityEngine.Debug.LogWarning("OMP Show!");
+
                 oMP_Show_R_P.Value.Del(rEntity);
             }
 
@@ -126,8 +162,15 @@ namespace GS.UI
             {
                 UnityEngine.Debug.LogWarning("OMP Update!");
 
-                //Удаляем компонент запроса
                 oMP_Update_R_P.Value.Del(rEntity);
+            }
+
+            //Для каждого запроса сокрытия панели карты объекта
+            foreach (int rEntity in oMP_Hide_R_F.Value)
+            {
+                UnityEngine.Debug.LogWarning("OMP Hide!");
+
+                oMP_Hide_R_P.Value.Del(rEntity);
             }
         }
     }

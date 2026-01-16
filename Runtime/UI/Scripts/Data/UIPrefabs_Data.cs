@@ -80,8 +80,11 @@ namespace GS.UI
             int prefabIndex = oSP_Prefabs.Count - 1;
 
             //Заносим префаб в словарь префабов
-            UIA_ObjectPanel.objectPanelPrefabs.Add(
+            UIA_ObjectScreenPanel.objectPanelPrefabs.Add(
                 prefabIndex, objectScreenPanelPrefab);
+
+            //Создаём новый список в словаре списков для кэширования
+            UIA_ObjectScreenPanel.cachedObjectPanels[prefabIndex] = new List<UIA_ObjectPanel>();
 
             //Возвращаем индекс
             return prefabIndex;
@@ -95,8 +98,11 @@ namespace GS.UI
             int prefabIndex = oMP_Prefabs.Count - 1;
 
             //Заносим префаб в словарь префабов
-            UIA_ObjectPanel.objectPanelPrefabs.Add(
+            UIA_ObjectMapPanel.objectPanelPrefabs.Add(
                 prefabIndex, objectMapPanelPrefab);
+
+            //Создаём новый список в словаре списков для кэширования
+            UIA_ObjectMapPanel.cachedObjectPanels[prefabIndex] = new List<UIA_ObjectPanel>();
 
             //Возвращаем индекс
             return prefabIndex;
