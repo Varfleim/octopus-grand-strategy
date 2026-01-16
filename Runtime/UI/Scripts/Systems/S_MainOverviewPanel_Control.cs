@@ -74,7 +74,7 @@ namespace GS.UI
                 out isSameSubpanel);
 
             //Берём запрошенную вкладку
-            UIA_MainOverviewSubpanelTab requestedTab = mOSubpanel.subpanelTabs[rComp.overviewSubpanelTabType];
+            UIA_MainOverviewSubpanelTab requestedTab = mOSubpanel.tabs[rComp.overviewSubpanelTabType];
 
             //Значения по умолчанию отрицательны
             isSameTab = false;

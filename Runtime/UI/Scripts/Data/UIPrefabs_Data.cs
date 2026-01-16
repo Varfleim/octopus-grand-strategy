@@ -47,7 +47,7 @@ namespace GS.UI
             mainOverviewSubpanelTab.SelfType = tabIndex;
 
             //Заносим вкладку в словарь родительской подпанели
-            mainOverviewSubpanel.subpanelTabs.Add(
+            mainOverviewSubpanel.tabs.Add(
                 tabIndex, mainOverviewSubpanelTab);
 
             //Возвращаем индекс

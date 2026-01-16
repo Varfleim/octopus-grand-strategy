@@ -28,9 +28,14 @@ namespace GS.UI
             startup.PreRenderSystem_Add(new S_OutlinerPanel_Control());
             //Управление главной обзорной панелью
             startup.PreRenderSystem_Add(new S_MainOverviewPanel_Control());
-
+            #endregion
+            #region Render
             //Управление панелями объектов
-            startup.PreRenderSystem_Add(new S_ObjectPanel_Control());
+            startup.RenderSystem_Add(new S_ObjectPanel_Control());
+            //Управление панелями объектов в планировщике
+            startup.RenderSystem_Add(new S_ObjectOutlinerPanel_Control());
+            //Управление панелями объектов в главной обзорной панели
+            startup.RenderSystem_Add(new S_ObjectMainOverviewPanel_Control());
             #endregion
             #region PostRender
             //Очистка событий

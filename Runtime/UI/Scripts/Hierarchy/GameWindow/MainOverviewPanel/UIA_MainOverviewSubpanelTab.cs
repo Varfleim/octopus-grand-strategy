@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using Leopotam.EcsLite;
 
@@ -23,5 +24,7 @@ namespace GS.UI
         public TabGroupButton selfTabButton;
 
         public EcsPackedEntity objectPE;
+
+        public VerticalLayoutGroup layoutGroup;
     }
 }

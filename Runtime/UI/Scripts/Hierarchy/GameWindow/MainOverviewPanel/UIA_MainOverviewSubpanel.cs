@@ -20,7 +20,7 @@ namespace GS.UI
         }
         private int selfType;
 
-        internal Dictionary<int, UIA_MainOverviewSubpanelTab> subpanelTabs = new();
+        internal Dictionary<int, UIA_MainOverviewSubpanelTab> tabs = new();
         public TabGroup tabGroup;
 
         public UIA_MainOverviewSubpanelTab activeSubpanelTab;

@@ -22,6 +22,8 @@ namespace GS.UI
         readonly EcsPoolInject<R_OutlinerPanelTab_Show> outlinerPT_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_OutlinerPanelTab_Update>> outlinerPT_Update_R_F = default;
         readonly EcsPoolInject<R_OutlinerPanelTab_Update> outlinerPT_Update_R_P = default;
+        readonly EcsFilterInject<Inc<R_ObjectOutlinerPanel_Show>> outlinerOP_Show_R_F = default;
+        readonly EcsPoolInject<R_ObjectOutlinerPanel_Show> outlinerOP_Show_R_P = default;
         void OutlinerP_Events_Clear()
         {
             //Очищаем события, которые не были удалены в GameUI
@@ -41,12 +43,21 @@ namespace GS.UI
                 //Удаляем компонент запроса
                 outlinerPT_Update_R_P.Value.Del(rEntity);
             }
+
+            //Для каждого запроса отображения панели объекта в планировщике
+            foreach(int rEntity in outlinerOP_Show_R_F.Value)
+            {
+                //Удаляем компонент запроса
+                outlinerOP_Show_R_P.Value.Del(rEntity);
+            }
         }
 
         readonly EcsFilterInject<Inc<R_MainOverviewSubpanelTab_Show>> mOPSbpT_Show_R_F = default;
         readonly EcsPoolInject<R_MainOverviewSubpanelTab_Show> mOPSbpT_Show_R_P = default;
         readonly EcsFilterInject<Inc<R_MainOverviewSubpanelTab_Update>> mOPSbpT_Update_R_F = default;
         readonly EcsPoolInject<R_MainOverviewSubpanelTab_Update> mOPSbpT_Update_R_P = default;
+        readonly EcsFilterInject<Inc<R_ObjectMainOverviewPanel_Show>> mOOP_Show_R_F = default;
+        readonly EcsPoolInject<R_ObjectMainOverviewPanel_Show> mOOP_Show_R_P = default;
         void MOP_Events_Clear()
         {
             //Очищаем события, которые не были удалены в GameUI
@@ -65,6 +76,13 @@ namespace GS.UI
 
                 //Удаляем компонент запроса
                 mOPSbpT_Update_R_P.Value.Del(rEntity);
+            }
+
+            //Для каждого запроса отображения панели объекта в главной обзорной панели
+            foreach (int rEntity in mOOP_Show_R_F.Value)
+            {
+                //Удаляем компонент запроса
+                mOOP_Show_R_P.Value.Del(rEntity);
             }
         }
 
