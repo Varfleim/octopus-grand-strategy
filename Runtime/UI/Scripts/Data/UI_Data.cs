@@ -141,6 +141,36 @@ namespace GS.UI
                 objectPE);
         }
 
+        public static void OutlinerOP_Show_R(
+            EcsPool<R_ObjectOutlinerPanel_Show> r_P,
+            int rEntity,
+            int outlinerPanelTabType,
+            int objectOutlinerPanelType, EcsPackedEntity objectPE)
+        {
+            //Назначаем сущности запрос
+            ref R_ObjectOutlinerPanel_Show rComp = ref r_P.Add(rEntity);
+
+            //Заполняем данные запроса
+            rComp = new(
+                outlinerPanelTabType,
+                objectOutlinerPanelType, objectPE);
+        }
+
+        public static void MOOP_Show_R(
+            EcsPool<R_ObjectMainOverviewPanel_Show> r_P,
+            int rEntity,
+            int overviewSubpanelType, int overviewSubpanelTabType,
+            int objectMainOverviewPanelType, EcsPackedEntity objectPE)
+        {
+            //Назначаем сущности запрос
+            ref R_ObjectMainOverviewPanel_Show rComp = ref r_P.Add(rEntity);
+
+            //Заполняем данные запроса
+            rComp = new(
+                overviewSubpanelType, overviewSubpanelTabType,
+                objectMainOverviewPanelType, objectPE);
+        }
+
         public static void OMP_Show_R(
             EcsWorld world,
             EcsPool<R_ObjectMapPanel_Show> r_P,
