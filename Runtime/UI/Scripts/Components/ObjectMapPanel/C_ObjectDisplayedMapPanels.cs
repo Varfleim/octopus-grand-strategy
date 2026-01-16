@@ -1,6 +1,8 @@
 
 using System.Collections.Generic;
 
+using Leopotam.EcsLite;
+
 namespace GS.UI
 {
     public struct C_ObjectDisplayedMapPanels
@@ -8,9 +10,13 @@ namespace GS.UI
         public C_ObjectDisplayedMapPanels(
             int a)
         {
-            objectMapPanels = new();
+            objectPanels = new();
+
+            parentProvincePE = new();
         }
 
-        public Dictionary<string, UIA_ObjectMapPanel> objectMapPanels;
+        public Dictionary<int, UIA_ObjectMapPanel> objectPanels;
+
+        public EcsPackedEntity parentProvincePE;
     }
 }

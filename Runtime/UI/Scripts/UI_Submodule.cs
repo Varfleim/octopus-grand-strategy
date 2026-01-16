@@ -10,23 +10,31 @@ namespace GS.UI
         [SerializeField]
         private UI_Data uI_Data;
         [SerializeField]
+        private UIPrefabs_Data uIPrefabs_Data;
+        [SerializeField]
         private UI_Core uI_Core;
 
         public override void Systems_Add(GameStartup startup)
         {
             //Добавляем покадровые системы
             #region Frame
-            //Ввод в панели объекта
-            startup.FrameSystem_Add(new S_ObjectPanel_Input());
+            //Ввод в главной обзорной панели
+            startup.FrameSystem_Add(new S_MainOverviewPanel_Input());
             #endregion
 
             //Добавляем системы рендеринга
             #region PreRender
-            //Отображение панели объекта
-            startup.PreRenderSystem_Add(new S_ObjectPanel_Control());
+            //Управление планировщиком
+            startup.PreRenderSystem_Add(new S_OutlinerPanel_Control());
+            //Управление главной обзорной панелью
+            startup.PreRenderSystem_Add(new S_MainOverviewPanel_Control());
 
-            //Отображение панелей карты объектов
-            startup.PreRenderSystem_Add(new S_ObjectMapPanel_Control());
+            //Управление панелями объектов
+            startup.PreRenderSystem_Add(new S_ObjectPanel_Control());
+            #endregion
+            #region PostRender
+            //Очистка событий
+            startup.PostRenderSystem_Add(new S_Events_Clear());
             #endregion
 
             //Добавляем потиковые системы
@@ -40,6 +48,9 @@ namespace GS.UI
         {
             //Вводим данные
             startup.Data_Inject(uI_Data);
+
+            //Вводим данные
+            startup.Data_Inject(uIPrefabs_Data);
 
             //Вводим данные
             startup.Data_Inject(uI_Core);

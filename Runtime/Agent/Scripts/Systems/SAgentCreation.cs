@@ -54,7 +54,7 @@ namespace GS.Agent
             }
 
             //Если цвета обновлены
-            if (isColorsUpdated == true)
+            if (isColorsUpdated)
             {
                 //Обновляем списки цветов агентов
                 AgentColorListsUpdate();
@@ -86,7 +86,7 @@ namespace GS.Agent
             Color agentColor = new Color(Random.value, Random.value, Random.value);
 
             //Пока данный цвет существует в словаре цветов
-            while (agentData.Value.agentUniqueColors.TryGetValue(agentColor, out EcsPackedEntity oldAgentPE) == true)
+            while (agentData.Value.agentUniqueColors.TryGetValue(agentColor, out EcsPackedEntity oldAgentPE))
             {
                 //Создаём случайный цвет
                 agentColor = new Color(Random.value, Random.value, Random.value);

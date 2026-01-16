@@ -6,8 +6,9 @@ namespace GS.UI
     public class UI_GameWindow : MonoBehaviour
     {
         public GameObject activeMainPanel;
+        public UI_MainOverviewPanel mainOverviewPanel;
 
-        public UI_ObjectPanel objectPanel;
+        public UI_OutlinerPanel outlinerPanel;
 
         public void MainPanel_Hide()
         {
@@ -33,11 +34,10 @@ namespace GS.UI
             }
 
             //Если была активна та же панель
-            if(isSamePanel == true)
+            if(isSamePanel)
             {
                 
             }
-            //Иначе
             else
             {
                 //Активируем запрошенную панель

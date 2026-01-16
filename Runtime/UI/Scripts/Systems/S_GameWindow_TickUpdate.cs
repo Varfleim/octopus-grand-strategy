@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 
@@ -26,32 +28,107 @@ namespace GS.UI
             //Берём окно игры
             UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
 
-            //Если активна панель объекта
-            if (gameWindow.activeMainPanel == gameWindow.objectPanel.gameObject)
+            //Если панель планировщика активна и есть активная вкладка
+            if(gameWindow.outlinerPanel.isActiveAndEnabled 
+                && gameWindow.outlinerPanel.activeTab != null)
             {
-                //Проверяем, требуется ли обновление в панели объекта
-                OP_TickUpdate();
+                //Проверяем, требуется ли обновление в нём
+                OutlinerPT_TickUpdate();
             }
+
+            //Если активна главная обзорная панель и есть активная подпанель
+            if (gameWindow.activeMainPanel == gameWindow.mainOverviewPanel.gameObject
+                && gameWindow.mainOverviewPanel.activeSubpanel != null)
+            {
+                //Проверяем, требуется ли обновление в ней
+                MOPanel_TickUpdate();
+            }
+
+            //Обновляем отображаемые панели объектов
+            OPs_TickUpdate();
         }
 
-        readonly EcsPoolInject<R_ObjectSubpanelTab_Show> OSbpT_Show_R_P = default;
-        void OP_TickUpdate()
+        readonly EcsPoolInject<R_OutlinerPanelTab_Show> outlinerPT_Show_R_P = default;
+        void OutlinerPT_TickUpdate()
         {
-            //Берём панель объекта
-            UI_ObjectPanel objectPanel = uI_Core.Value.gameWindow.objectPanel;
-
-            //Берём активную подпанель
-            UIA_ObjectSubpanel activeSubpanel = objectPanel.activeSubpanel;
+            //Берём панель планировщика
+            UI_OutlinerPanel outlinerPanel = uI_Core.Value.gameWindow.outlinerPanel;
 
             //Берём активную вкладку
-            UIA_ObjectSubpanelTab activeSubpanelTab = activeSubpanel.activeTab;
+            UIA_OutlinerPanelTab activeOutlinerPT = outlinerPanel.activeTab;
 
-            //Запрашиваем отображение этой подпанели
-            UI_Data.ObjectSubpanelTab_Show_R(
+            //Запрашиваем отображение этой вкладки
+            UI_Data.OutlinerPT_Show_R(
                 world.Value,
-                OSbpT_Show_R_P.Value,
+                outlinerPT_Show_R_P.Value,
+                activeOutlinerPT.SelfType);
+        }
+
+        readonly EcsPoolInject<R_MainOverviewSubpanelTab_Show> mOSbpT_Show_R_P = default;
+        void MOPanel_TickUpdate()
+        {
+            //Берём главную обзорную панель
+            UI_MainOverviewPanel mOPanel = uI_Core.Value.gameWindow.mainOverviewPanel;
+
+            //Берём активную подпанель
+            UIA_MainOverviewSubpanel activeSubpanel = mOPanel.activeSubpanel;
+
+            //Берём активную вкладку
+            UIA_MainOverviewSubpanelTab activeSubpanelTab = activeSubpanel.activeSubpanelTab;
+
+            //Запрашиваем отображение этой вкладки
+            UI_Data.MOSbpT_Show_R(
+                world.Value,
+                mOSbpT_Show_R_P.Value,
                 activeSubpanel.SelfType, activeSubpanelTab.SelfType,
                 activeSubpanelTab.objectPE);
+        }
+
+        readonly EcsFilterInject<Inc<C_ObjectDisplayedScreenPanels>> oDSPs_F = default;
+        readonly EcsPoolInject<C_ObjectDisplayedScreenPanels> oDSPs_P = default;
+        readonly EcsFilterInject<Inc<C_ObjectDisplayedMapPanels>> oDMPs_F = default;
+        readonly EcsPoolInject<C_ObjectDisplayedMapPanels> oDMPs_P = default;
+        readonly EcsPoolInject<R_ObjectScreenPanel_Update> oSP_Update_R_P = default;
+        readonly EcsPoolInject<R_ObjectMapPanel_Update> oMP_Update_R_P = default;
+        void OPs_TickUpdate()
+        {
+            //Для каждого компонента экранных панелей объекта
+            foreach(int objectEntity in oDSPs_F.Value)
+            {
+                //Берём компонент и упаковываем сущность объекта
+                ref C_ObjectDisplayedScreenPanels oDSPs = ref oDSPs_P.Value.Get(objectEntity);
+                EcsPackedEntity objectPE = world.Value.PackEntity(objectEntity);
+
+                //Для каждой панели
+                foreach(KeyValuePair<int, UIA_ObjectScreenPanel> kVP_OSP in oDSPs.objectPanels)
+                {
+                    //Запрашиваем обновление панели
+                    UI_Data.OSP_Update_R(
+                        world.Value,
+                        oSP_Update_R_P.Value,
+                        kVP_OSP.Key,
+                        objectPE);
+                }
+            }
+
+            //Для каждого компонента панелей карты объекта
+            foreach (int objectEntity in oDMPs_F.Value)
+            {
+                //Берём компонент и упаковываем сущность объекта
+                ref C_ObjectDisplayedMapPanels oDSPs = ref oDMPs_P.Value.Get(objectEntity);
+                EcsPackedEntity objectPE = world.Value.PackEntity(objectEntity);
+
+                //Для каждой панели
+                foreach (KeyValuePair<int, UIA_ObjectMapPanel> kVP_OMP in oDSPs.objectPanels)
+                {
+                    //Запрашиваем обновление панели
+                    UI_Data.OMP_Update_R(
+                        world.Value,
+                        oMP_Update_R_P.Value,
+                        kVP_OMP.Key,
+                        objectPE);
+                }
+            }
         }
     }
 }

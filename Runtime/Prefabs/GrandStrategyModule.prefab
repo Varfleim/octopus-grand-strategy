@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 723244981473944359}
   - component: {fileID: 828958048526398988}
   - component: {fileID: 3386033266180643909}
+  - component: {fileID: 6358532414802717061}
   m_Layer: 0
   m_Name: UISubmodule
   m_TagString: Untagged
@@ -93,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uI_Data: {fileID: 3386033266180643909}
+  uIPrefabs_Data: {fileID: 6358532414802717061}
   uI_Core: {fileID: 0}
 --- !u!114 &3386033266180643909
 MonoBehaviour:
@@ -104,5 +106,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7cd92039ffcb26409eba9fee41b985e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6358532414802717061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7695236949846022028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f62a3858ffda4e489315208690fb456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
