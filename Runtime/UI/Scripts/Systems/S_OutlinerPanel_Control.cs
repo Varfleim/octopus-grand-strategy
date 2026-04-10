@@ -6,6 +6,9 @@ namespace GS.UI
 {
     public class S_OutlinerPanel_Control : IEcsRunSystem
     {
+        readonly EcsWorldInject world = default;
+
+
         readonly EcsCustomInject<UI_Core> uI_Core = default;
 
         public void Run(IEcsSystems systems)
@@ -37,8 +40,8 @@ namespace GS.UI
 
                 //«апрашиваем обновление данных во вкладке
                 UI_Data.OutlinerPT_Update_R(
+                    world.Value,
                     outlinerPT_Update_R_P.Value,
-                    rEntity,
                     isSameTab);
             }
         }

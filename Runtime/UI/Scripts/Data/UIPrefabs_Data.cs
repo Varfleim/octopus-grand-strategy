@@ -13,8 +13,8 @@ namespace GS.UI
         private List<UIA_MainOverviewSubpanel> mOSubpanels = new();
         private List<UIA_MainOverviewSubpanelTab> mOSbpTabs = new();
         private List<UIA_OutlinerPanelTab> outlinerPTabs = new();
-        private List<UIA_ObjectScreenPanel> oSP_Prefabs = new();
-        private List<UIA_ObjectMapPanel> oMP_Prefabs = new();
+        private List<UIA_EntityScreenPanel> oSP_Prefabs = new();
+        private List<UIA_EntityMapPanel> oMP_Prefabs = new();
 
         public int MOSbp_AddAndGetIndex(
             UI_MainOverviewPanel mainOverviewPanel,
@@ -73,36 +73,36 @@ namespace GS.UI
         }
 
         public int OSP_Prefab_AddAndGetIndex(
-            UIA_ObjectScreenPanel objectScreenPanelPrefab)
+            UIA_EntityScreenPanel entScreenPanelPrefab)
         {
             //Заносим префаб в список и берём индекс
-            oSP_Prefabs.Add(objectScreenPanelPrefab);
+            oSP_Prefabs.Add(entScreenPanelPrefab);
             int prefabIndex = oSP_Prefabs.Count - 1;
 
             //Заносим префаб в словарь префабов
-            UIA_ObjectScreenPanel.objectPanelPrefabs.Add(
-                prefabIndex, objectScreenPanelPrefab);
+            UIA_EntityScreenPanel.entPanelPrefabs.Add(
+                prefabIndex, entScreenPanelPrefab);
 
             //Создаём новый список в словаре списков для кэширования
-            UIA_ObjectScreenPanel.cachedObjectPanels[prefabIndex] = new List<UIA_ObjectPanel>();
+            UIA_EntityScreenPanel.cachedEntPanels[prefabIndex] = new List<UIA_EntityPanel>();
 
             //Возвращаем индекс
             return prefabIndex;
         }
 
         public int OMP_Prefab_AddAndGetIndex(
-            UIA_ObjectMapPanel objectMapPanelPrefab)
+            UIA_EntityMapPanel entMapPanelPrefab)
         {
             //Заносим префаб в список и берём индекс
-            oMP_Prefabs.Add(objectMapPanelPrefab);
+            oMP_Prefabs.Add(entMapPanelPrefab);
             int prefabIndex = oMP_Prefabs.Count - 1;
 
             //Заносим префаб в словарь префабов
-            UIA_ObjectMapPanel.objectPanelPrefabs.Add(
-                prefabIndex, objectMapPanelPrefab);
+            UIA_EntityMapPanel.entPanelPrefabs.Add(
+                prefabIndex, entMapPanelPrefab);
 
             //Создаём новый список в словаре списков для кэширования
-            UIA_ObjectMapPanel.cachedObjectPanels[prefabIndex] = new List<UIA_ObjectPanel>();
+            UIA_EntityMapPanel.cachedEntPanels[prefabIndex] = new List<UIA_EntityPanel>();
 
             //Возвращаем индекс
             return prefabIndex;

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using Leopotam.EcsLite;
+
 namespace GS.UI
 {
     public abstract class UIA_MainOverviewSubpanel : MonoBehaviour
@@ -24,5 +26,31 @@ namespace GS.UI
         public TabGroup tabGroup;
 
         public UIA_MainOverviewSubpanelTab activeSubpanelTab;
+
+        protected bool isFiltersAndPoolsFilled;
+
+        public virtual void RenderShow(EcsWorld world)
+        {
+
+        }
+
+        public virtual void RenderUpdate(EcsWorld world)
+        {
+
+        }
+        public virtual void TickUpdate(EcsWorld world)
+        {
+
+        }
+
+        public virtual void RenderHide(EcsWorld world)
+        {
+
+        }
+
+        public virtual void FiltersAndPools_CheckFilled(EcsWorld world)
+        {
+
+        }
     }
 }

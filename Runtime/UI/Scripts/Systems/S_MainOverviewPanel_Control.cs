@@ -6,6 +6,9 @@ namespace GS.UI
 {
     public class S_MainOverviewPanel_Control : IEcsRunSystem
     {
+        readonly EcsWorldInject world = default;
+
+
         readonly EcsCustomInject<UI_Core> uI_Core = default;
 
         public void Run(IEcsSystems systems)
@@ -34,35 +37,35 @@ namespace GS.UI
                     out bool isSamePanel,
                     out bool isSameSubpanel,
                     out bool isSameTab,
-                    out bool isSameObject);
+                    out bool isSameEnt);
 
                 //Запрос передаётся дальше, переходя в модуль игры, где могут быть особые функции отображения
 
                 //Запрашиваем обновление данных во вкладке
                 UI_Data.MOSbpT_Update_R(
+                    world.Value,
                     mOSbpT_Update_R_P.Value,
-                    rEntity,
                     isSamePanel,
                     isSameSubpanel,
                     isSameTab,
-                    isSameObject);
+                    isSameEnt);
             }
         }
 
         /// <summary>
-        /// Функция, активирующая запрошенную вкладку и проверяющая, была ли она уже активна и был ли активен запрошенный объект
+        /// Функция, активирующая запрошенную вкладку и проверяющая, была ли она уже активна и была ли активна запрошенная сущность
         /// </summary>
         /// <param name="rComp"></param>
         /// <param name="isSamePanel"></param>
         /// <param name="isSameSubpanel"></param>
         /// <param name="isSameTab"></param>
-        /// <param name="isSameObject"></param>
+        /// <param name="isSameEnt"></param>
         void MOSbpT_Show(
             ref R_MainOverviewSubpanelTab_Show rComp,
             out bool isSamePanel,
             out bool isSameSubpanel,
             out bool isSameTab,
-            out bool isSameObject)
+            out bool isSameEnt)
         {
             //Берём запрошенную главную обзорную подпанель
             UIA_MainOverviewSubpanel mOSubpanel = uI_Core.Value.gameWindow.mainOverviewPanel.subpanels[rComp.overviewSubpanelType];
@@ -78,7 +81,7 @@ namespace GS.UI
 
             //Значения по умолчанию отрицательны
             isSameTab = false;
-            isSameObject = false;
+            isSameEnt = false;
 
             //Если активна необходимая вкладка
             if (mOSubpanel.activeSubpanelTab == requestedTab)
@@ -89,11 +92,11 @@ namespace GS.UI
                     //Сообщаем, что была активна та же вкладка
                     isSameTab = true;
 
-                    //Если вкладка была активна для того же объекта
-                    if(mOSubpanel.activeSubpanelTab.objectPE.EqualsTo(rComp.objectPE))
+                    //Если вкладка была активна для той же сущности
+                    if (mOSubpanel.activeSubpanelTab.entPE.EqualsTo(rComp.entPE))
                     {
-                        //Сообщаем, что был активен тот же объект
-                        isSameObject = true;
+                        //Сообщаем, что был активен тот же сущность
+                        isSameEnt = true;
                     }
                 }
             }
@@ -139,17 +142,17 @@ namespace GS.UI
                 mOSubpanel.activeSubpanelTab = requestedTab;
             }
 
-            //Если был активен тот же объект
-            if (isSameObject)
+            //Если была активна та же сущность
+            if (isSameEnt)
             {
-                UnityEngine.Debug.LogWarning("Same object!");
+                UnityEngine.Debug.LogWarning("Same entity!");
             }
             else
             {
-                UnityEngine.Debug.LogWarning("Not same object!");
+                UnityEngine.Debug.LogWarning("Not same entity!");
 
-                //Указываем его как активный объект
-                mOSubpanel.activeSubpanelTab.objectPE = rComp.objectPE;
+                //Указываем её как активную сущность
+                mOSubpanel.activeSubpanelTab.entPE = rComp.entPE;
             }
         }
 
@@ -268,8 +271,8 @@ namespace GS.UI
             //Скрываем активную вкладку
             overviewSubpanel.activeSubpanelTab.gameObject.SetActive(false);
 
-            //Очищаем сущность активного объекта
-            overviewSubpanel.activeSubpanelTab.objectPE = new();
+            //Очищаем сущность активной сущн
+            overviewSubpanel.activeSubpanelTab.entPE = new();
 
             //Указываем, что активной вкладки нет
             overviewSubpanel.activeSubpanelTab = null;

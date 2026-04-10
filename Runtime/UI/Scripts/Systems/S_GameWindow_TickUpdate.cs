@@ -44,89 +44,91 @@ namespace GS.UI
                 MOPanel_TickUpdate();
             }
 
-            //Обновляем отображаемые панели объектов
+            //Обновляем отображаемые панели сущностей
             OPs_TickUpdate();
         }
 
-        readonly EcsPoolInject<R_OutlinerPanelTab_Show> outlinerPT_Show_R_P = default;
+        readonly EcsPoolInject<R_OutlinerPanelTab_Update> outlinerPT_Update_R_P = default;
         void OutlinerPT_TickUpdate()
         {
             //Берём панель планировщика
-            UI_OutlinerPanel outlinerPanel = uI_Core.Value.gameWindow.outlinerPanel;
+            //UI_OutlinerPanel outlinerPanel = uI_Core.Value.gameWindow.outlinerPanel;
 
             //Берём активную вкладку
-            UIA_OutlinerPanelTab activeOutlinerPT = outlinerPanel.activeTab;
+            //UIA_OutlinerPanelTab activeOutlinerPT = outlinerPanel.activeTab;
 
-            //Запрашиваем отображение этой вкладки
-            UI_Data.OutlinerPT_Show_R(
+            //Запрашиваем обновление этой вкладки
+            UI_Data.OutlinerPT_Update_R(
                 world.Value,
-                outlinerPT_Show_R_P.Value,
-                activeOutlinerPT.SelfType);
+                outlinerPT_Update_R_P.Value,
+                true);
         }
 
-        readonly EcsPoolInject<R_MainOverviewSubpanelTab_Show> mOSbpT_Show_R_P = default;
+        readonly EcsPoolInject<R_MainOverviewSubpanelTab_Update> mOSbpT_Update_R_P = default;
         void MOPanel_TickUpdate()
         {
             //Берём главную обзорную панель
-            UI_MainOverviewPanel mOPanel = uI_Core.Value.gameWindow.mainOverviewPanel;
+            //UI_MainOverviewPanel mOPanel = uI_Core.Value.gameWindow.mainOverviewPanel;
 
             //Берём активную подпанель
-            UIA_MainOverviewSubpanel activeSubpanel = mOPanel.activeSubpanel;
+            //UIA_MainOverviewSubpanel activeSubpanel = mOPanel.activeSubpanel;
 
             //Берём активную вкладку
-            UIA_MainOverviewSubpanelTab activeSubpanelTab = activeSubpanel.activeSubpanelTab;
+            //UIA_MainOverviewSubpanelTab activeSubpanelTab = activeSubpanel.activeSubpanelTab;
 
             //Запрашиваем отображение этой вкладки
-            UI_Data.MOSbpT_Show_R(
+            UI_Data.MOSbpT_Update_R(
                 world.Value,
-                mOSbpT_Show_R_P.Value,
-                activeSubpanel.SelfType, activeSubpanelTab.SelfType,
-                activeSubpanelTab.objectPE);
+                mOSbpT_Update_R_P.Value,
+                true,
+                true,
+                true,
+                true);
         }
 
-        readonly EcsFilterInject<Inc<C_ObjectDisplayedScreenPanels>> oDSPs_F = default;
-        readonly EcsPoolInject<C_ObjectDisplayedScreenPanels> oDSPs_P = default;
-        readonly EcsFilterInject<Inc<C_ObjectDisplayedMapPanels>> oDMPs_F = default;
-        readonly EcsPoolInject<C_ObjectDisplayedMapPanels> oDMPs_P = default;
-        readonly EcsPoolInject<R_ObjectScreenPanel_Update> oSP_Update_R_P = default;
-        readonly EcsPoolInject<R_ObjectMapPanel_Update> oMP_Update_R_P = default;
+        readonly EcsFilterInject<Inc<C_EntityDisplayedScreenPanels>> eDSPs_F = default;
+        readonly EcsPoolInject<C_EntityDisplayedScreenPanels> eDSPs_P = default;
+        readonly EcsFilterInject<Inc<C_EntityDisplayedMapPanels>> eDMPs_F = default;
+        readonly EcsPoolInject<C_EntityDisplayedMapPanels> eDMPs_P = default;
+        readonly EcsPoolInject<R_EntityScreenPanel_Update> eSP_Update_R_P = default;
+        readonly EcsPoolInject<R_EntityMapPanel_Update> eMP_Update_R_P = default;
         void OPs_TickUpdate()
         {
-            //Для каждого компонента экранных панелей объекта
-            foreach(int objectEntity in oDSPs_F.Value)
+            //Для каждого компонента экранных панелей сущности
+            foreach (int entEntity in eDSPs_F.Value)
             {
-                //Берём компонент и упаковываем сущность объекта
-                ref C_ObjectDisplayedScreenPanels oDSPs = ref oDSPs_P.Value.Get(objectEntity);
-                EcsPackedEntity objectPE = world.Value.PackEntity(objectEntity);
+                //Берём компонент и упаковываем сущность
+                ref C_EntityDisplayedScreenPanels oDSPs = ref eDSPs_P.Value.Get(entEntity);
+                EcsPackedEntity entPE = world.Value.PackEntity(entEntity);
 
                 //Для каждой панели
-                foreach(KeyValuePair<int, UIA_ObjectScreenPanel> kVP_OSP in oDSPs.objectPanels)
+                foreach(KeyValuePair<int, UIA_EntityScreenPanel> kVP_OSP in oDSPs.entPanels)
                 {
                     //Запрашиваем обновление панели
-                    UI_Data.OSP_Update_R(
+                    UI_Data.ESP_Update_R(
                         world.Value,
-                        oSP_Update_R_P.Value,
+                        eSP_Update_R_P.Value,
                         kVP_OSP.Key,
-                        objectPE);
+                        entPE);
                 }
             }
 
-            //Для каждого компонента панелей карты объекта
-            foreach (int objectEntity in oDMPs_F.Value)
+            //Для каждого компонента панелей карты сущности
+            foreach (int entEntity in eDMPs_F.Value)
             {
-                //Берём компонент и упаковываем сущность объекта
-                ref C_ObjectDisplayedMapPanels oDSPs = ref oDMPs_P.Value.Get(objectEntity);
-                EcsPackedEntity objectPE = world.Value.PackEntity(objectEntity);
+                //Берём компонент и упаковываем сущность
+                ref C_EntityDisplayedMapPanels oDSPs = ref eDMPs_P.Value.Get(entEntity);
+                EcsPackedEntity entPE = world.Value.PackEntity(entEntity);
 
                 //Для каждой панели
-                foreach (KeyValuePair<int, UIA_ObjectMapPanel> kVP_OMP in oDSPs.objectPanels)
+                foreach (KeyValuePair<int, UIA_EntityMapPanel> kVP_OMP in oDSPs.entPanels)
                 {
                     //Запрашиваем обновление панели
-                    UI_Data.OMP_Update_R(
+                    UI_Data.EMP_Update_R(
                         world.Value,
-                        oMP_Update_R_P.Value,
+                        eMP_Update_R_P.Value,
                         kVP_OMP.Key,
-                        objectPE);
+                        entPE);
                 }
             }
         }

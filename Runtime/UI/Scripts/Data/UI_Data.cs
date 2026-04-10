@@ -35,11 +35,12 @@ namespace GS.UI
         }
 
         internal static void OutlinerPT_Update_R(
+            EcsWorld world,
             EcsPool<R_OutlinerPanelTab_Update> r_P,
-            int rEntity,
             bool isSameTab)
         {
-            //Назначаем сущности запрос
+            //Создаём новую сущность и назначаем ей запрос
+            int rEntity = world.NewEntity();
             ref R_OutlinerPanelTab_Update rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
@@ -65,7 +66,7 @@ namespace GS.UI
             EcsWorld world,
             EcsPool<R_MainOverviewSubpanelTab_Show> r_P,
             int mOSbpType, int mOSbpTType,
-            EcsPackedEntity objectPE)
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
@@ -74,18 +75,19 @@ namespace GS.UI
             //Заполняем данные запроса
             rComp = new(
                 mOSbpType, mOSbpTType,
-                objectPE);
+                entPE);
         }
 
         internal static void MOSbpT_Update_R(
+            EcsWorld world,
             EcsPool<R_MainOverviewSubpanelTab_Update> r_P,
-            int rEntity,
             bool isSamePanel,
             bool isSameSubpanel,
             bool isSameTab,
-            bool isSameObject)
+            bool isSameEnt)
         {
-            //Назначаем сущности запрос
+            //Создаём новую сущность и назначаем ей запрос
+            int rEntity = world.NewEntity();
             ref R_MainOverviewSubpanelTab_Update rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
@@ -93,140 +95,140 @@ namespace GS.UI
                 isSamePanel,
                 isSameSubpanel,
                 isSameTab,
-                isSameObject);
+                isSameEnt);
         }
         #endregion
 
-        #region ObjectPanel
-        #region ObjectScreenPanel
-        public static void OSP_Show_R(
+        #region EntityPanel
+        #region EntityScreenPanel
+        public static void ESP_Show_R(
             EcsWorld world,
-            EcsPool<R_ObjectScreenPanel_Show> r_P,
-            int objectScreenPanelType,
-            EcsPackedEntity objectPE)
+            EcsPool<R_EntityScreenPanel_Show> r_P,
+            int entScreenPanelType,
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectScreenPanel_Show rComp = ref r_P.Add(rEntity);
+            ref R_EntityScreenPanel_Show rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                objectScreenPanelType,
-                objectPE);
+                entScreenPanelType,
+                entPE);
         }
 
-        public static void OSP_Hide_R(
+        public static void ESP_Hide_R(
             EcsWorld world,
-            EcsPool<R_ObjectScreenPanel_Hide> r_P,
-            int objectScreenPanelType,
-            EcsPackedEntity objectPE)
+            EcsPool<R_EntityScreenPanel_Hide> r_P,
+            int entScreenPanelType,
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectScreenPanel_Hide rComp = ref r_P.Add(rEntity);
+            ref R_EntityScreenPanel_Hide rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                objectScreenPanelType,
-                objectPE);
+                entScreenPanelType,
+                entPE);
         }
 
-        internal static void OSP_Update_R(
+        internal static void ESP_Update_R(
             EcsWorld world,
-            EcsPool<R_ObjectScreenPanel_Update> r_P,
+            EcsPool<R_EntityScreenPanel_Update> r_P,
             int panelType,
-            EcsPackedEntity objectPE)
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectScreenPanel_Update rComp = ref r_P.Add(rEntity);
+            ref R_EntityScreenPanel_Update rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
                 panelType,
-                objectPE);
+                entPE);
         }
 
-        public static void OutlinerOP_Show_R(
+        public static void OutlinerEP_Show_R(
             EcsWorld world,
-            EcsPool<R_ObjectOutlinerPanel_Show> r_P,
+            EcsPool<R_EntityOutlinerPanel_Show> r_P,
             int outlinerPanelTabType,
-            int objectOutlinerPanelType, EcsPackedEntity objectPE)
+            int entOutlinerPanelType, EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectOutlinerPanel_Show rComp = ref r_P.Add(rEntity);
+            ref R_EntityOutlinerPanel_Show rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
                 outlinerPanelTabType,
-                objectOutlinerPanelType, objectPE);
+                entOutlinerPanelType, entPE);
         }
 
-        public static void MOOP_Show_R(
+        public static void MOEP_Show_R(
             EcsWorld world,
-            EcsPool<R_ObjectMainOverviewPanel_Show> r_P,
+            EcsPool<R_EntityMainOverviewPanel_Show> r_P,
             int overviewSubpanelType, int overviewSubpanelTabType,
-            int objectMainOverviewPanelType, EcsPackedEntity objectPE)
+            int entMainOverviewPanelType, EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectMainOverviewPanel_Show rComp = ref r_P.Add(rEntity);
+            ref R_EntityMainOverviewPanel_Show rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
                 overviewSubpanelType, overviewSubpanelTabType,
-                objectMainOverviewPanelType, objectPE);
+                entMainOverviewPanelType, entPE);
         }
         #endregion
 
-        #region ObjectMapPanel
-        public static void OMP_Show_R(
+        #region EntityMapPanel
+        public static void EMP_Show_R(
             EcsWorld world,
-            EcsPool<R_ObjectMapPanel_Show> r_P,
-            int objectMapPanelType,
-            EcsPackedEntity objectPE)
+            EcsPool<R_EntityMapPanel_Show> r_P,
+            int entMapPanelType,
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectMapPanel_Show rComp = ref r_P.Add(rEntity);
+            ref R_EntityMapPanel_Show rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                objectMapPanelType,
-                objectPE);
+                entMapPanelType,
+                entPE);
         }
 
-        public static void OMP_Hide_R(
+        public static void EMP_Hide_R(
             EcsWorld world,
-            EcsPool<R_ObjectMapPanel_Hide> r_P,
-            int objectMapPanelType,
-            EcsPackedEntity objectPE)
+            EcsPool<R_EntityMapPanel_Hide> r_P,
+            int entMapPanelType,
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectMapPanel_Hide rComp = ref r_P.Add(rEntity);
+            ref R_EntityMapPanel_Hide rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                objectMapPanelType,
-                objectPE);
+                entMapPanelType,
+                entPE);
         }
 
-        internal static void OMP_Update_R(
+        internal static void EMP_Update_R(
             EcsWorld world,
-            EcsPool<R_ObjectMapPanel_Update> r_P,
+            EcsPool<R_EntityMapPanel_Update> r_P,
             int panelType,
-            EcsPackedEntity objectPE)
+            EcsPackedEntity entPE)
         {
             //Создаём новую сущность и назначаем ей запрос
             int rEntity = world.NewEntity();
-            ref R_ObjectMapPanel_Update rComp = ref r_P.Add(rEntity);
+            ref R_EntityMapPanel_Update rComp = ref r_P.Add(rEntity);
 
             //Заполняем данные запроса
             rComp = new(
                 panelType,
-                objectPE);
+                entPE);
         }
         #endregion
         #endregion
