@@ -10,15 +10,13 @@ namespace GS.UI
     /// </summary>
     public class UIPrefabs_Data : MonoBehaviour
     {
-        private List<UIA_MainOverviewSubpanel> mOSubpanels = new();
-        private List<UIA_MainOverviewSubpanelTab> mOSbpTabs = new();
-        private List<UIA_OutlinerPanelTab> outlinerPTabs = new();
-        private List<UIA_EntityScreenPanel> oSP_Prefabs = new();
-        private List<UIA_EntityMapPanel> oMP_Prefabs = new();
+        private List<UI_MainOverviewSubpanel> mOSubpanels = new();
+        private List<UI_MainOverviewTab> mOSbpTabs = new();
+        private List<UI_OutlinerTab> outlinerPTabs = new();
 
         public int MOSbp_AddAndGetIndex(
             UI_MainOverviewPanel mainOverviewPanel,
-            UIA_MainOverviewSubpanel mainOverviewSubpanel)
+            UI_MainOverviewSubpanel mainOverviewSubpanel)
         {
             //Заносим подпанель в список и берём индекс
             mOSubpanels.Add(mainOverviewSubpanel);
@@ -36,8 +34,8 @@ namespace GS.UI
         }
 
         public int MOSbpT_AddAndGetIndex(
-            UIA_MainOverviewSubpanel mainOverviewSubpanel,
-            UIA_MainOverviewSubpanelTab mainOverviewSubpanelTab)
+            UI_MainOverviewSubpanel mainOverviewSubpanel,
+            UI_MainOverviewTab mainOverviewSubpanelTab)
         {
             //Заносим вкладку в список и берём индекс
             mOSbpTabs.Add(mainOverviewSubpanelTab);
@@ -56,7 +54,7 @@ namespace GS.UI
 
         public int OutlinerPT_AddAndGetIndex(
             UI_OutlinerPanel outlinerPanel,
-            UIA_OutlinerPanelTab outlinerPanelTab)
+            UI_OutlinerTab outlinerPanelTab)
         {
             //Заносим вкладку в список и берём индекс
             outlinerPTabs.Add(outlinerPanelTab);
@@ -70,42 +68,6 @@ namespace GS.UI
 
             //Возвращаем индекс
             return tabIndex;
-        }
-
-        public int OSP_Prefab_AddAndGetIndex(
-            UIA_EntityScreenPanel entScreenPanelPrefab)
-        {
-            //Заносим префаб в список и берём индекс
-            oSP_Prefabs.Add(entScreenPanelPrefab);
-            int prefabIndex = oSP_Prefabs.Count - 1;
-
-            //Заносим префаб в словарь префабов
-            UIA_EntityScreenPanel.entPanelPrefabs.Add(
-                prefabIndex, entScreenPanelPrefab);
-
-            //Создаём новый список в словаре списков для кэширования
-            UIA_EntityScreenPanel.cachedEntPanels[prefabIndex] = new List<UIA_EntityPanel>();
-
-            //Возвращаем индекс
-            return prefabIndex;
-        }
-
-        public int OMP_Prefab_AddAndGetIndex(
-            UIA_EntityMapPanel entMapPanelPrefab)
-        {
-            //Заносим префаб в список и берём индекс
-            oMP_Prefabs.Add(entMapPanelPrefab);
-            int prefabIndex = oMP_Prefabs.Count - 1;
-
-            //Заносим префаб в словарь префабов
-            UIA_EntityMapPanel.entPanelPrefabs.Add(
-                prefabIndex, entMapPanelPrefab);
-
-            //Создаём новый список в словаре списков для кэширования
-            UIA_EntityMapPanel.cachedEntPanels[prefabIndex] = new List<UIA_EntityPanel>();
-
-            //Возвращаем индекс
-            return prefabIndex;
         }
     }
 }

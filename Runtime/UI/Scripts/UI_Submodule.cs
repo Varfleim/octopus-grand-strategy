@@ -16,28 +16,44 @@ namespace GS.UI
 
         public override void Systems_Add(GameStartup startup)
         {
+            //Добавляем системы инициализации
+            #region Init
+            //Инициализация обзорных панелей
+            startup.InitSystem_Add(new S_OverviewPanel_Initialization());
+
+            //Создание блоков 
+            startup.InitSystem_Add(new S_Block_Creation());
+            #endregion
+
             //Добавляем покадровые системы
             #region Frame
+            //Ввод в обзорных панелях
+            startup.FrameSystem_Add(new S_OverviewPanel_Input());
             //Ввод в главной обзорной панели
             startup.FrameSystem_Add(new S_MainOverviewPanel_Input());
+            //Ввод в панели планировщика
+            startup.FrameSystem_Add(new S_OutlinerPanel_Input());
+            //Ввод в панели линз
+            startup.FrameSystem_Add(new S_LensPanel_Input());
+
+            //Ввод в блоках
+            startup.FrameSystem_Add(new S_Block_Input());
             #endregion
 
             //Добавляем системы рендеринга
             #region PreRender
-            //Управление планировщиком
-            startup.PreRenderSystem_Add(new S_OutlinerPanel_Control());
-            //Управление главной обзорной панелью
-            startup.PreRenderSystem_Add(new S_MainOverviewPanel_Control());
+            //Управление обзорными панелями
+            startup.PreRenderSystem_Add(new S_OverviewPanel_Control());
             #endregion
             #region Render
-            //Управление панелями сущностей
-            startup.RenderSystem_Add(new S_EntityPanel_Control());
-            //Управление панелями сущностей в планировщике
-            startup.RenderSystem_Add(new S_EntityOutlinerPanel_Control());
-            //Управление панелями сущностей в главной обзорной панели
-            startup.RenderSystem_Add(new S_EntityMainOverviewPanel_Control());
+            //Обновление обзорных панелей
+            startup.RenderSystem_Add(new S_OverviewPanel_Update());
             #endregion
             #region PostRender
+            //Обновление блоков
+            startup.PostRenderSystem_Add(new SMT_BlockList_PreUpdate());
+            startup.PostRenderSystem_Add(new S_Block_Update());
+
             //Очистка событий
             startup.PostRenderSystem_Add(new S_Events_Clear());
             #endregion
