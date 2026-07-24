@@ -1,11 +1,7 @@
 
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using TMPro;
-
-using Leopotam.EcsLite;
 
 namespace GS.UI
 {
@@ -16,14 +12,14 @@ namespace GS.UI
         {
             get
             {
-                return selfType;
+                return selfIndex;
             }
             internal set
             {
-                selfType = value;
+                selfIndex = value;
             }
         }
-        private int selfType;
+        private int selfIndex;
 
         public UIA_OverviewSubpanel subpanelPrefab;
         public UIA_OverviewSubpanelButton subpanelButtonPrefab;
@@ -40,75 +36,59 @@ namespace GS.UI
         public TextMeshProUGUI panelNameText;
         protected bool isFiltersAndPoolsFilled;
 
-        internal Dictionary<string, int> subpanelTypes = new();
-        internal Dictionary<int, UIA_OverviewSubpanel> subpanels = new();
         public UIA_OverviewSubpanel activeSubpanel;
 
-        public virtual void RenderShow(EcsWorld world)
+        public virtual void RenderShow()
         {
             //Активируем панель и панель кнопок
             gameObject.SetActive(true);
             buttonsGroup.SetActive(true);
         }
-        public virtual void Content_RenderShow(EcsWorld world)
+        public virtual void Content_RenderShow()
         {
             //Активируем панель содержимого
             contentPanel.SetActive(true);
         }
 
-        public virtual void RenderUpdate(EcsWorld world)
+        public virtual void RenderUpdate()
         {
 
         }
-        public virtual void Buttons_RenderUpdate(EcsWorld world)
+        public virtual void Buttons_RenderUpdate()
         {
 
         }
-        public virtual void Content_RenderUpdate(EcsWorld world)
-        {
-
-        }
-
-        public virtual void TickUpdate(EcsWorld world)
-        {
-
-        }
-        public virtual void Buttons_TickUpdate(EcsWorld world)
-        {
-
-        }
-        public virtual void Content_TickUpdate(EcsWorld world)
+        public virtual void Content_RenderUpdate()
         {
 
         }
 
-        public virtual void RenderHide(EcsWorld world)
+        public virtual void TickUpdate()
+        {
+
+        }
+        public virtual void Buttons_TickUpdate()
+        {
+
+        }
+        public virtual void Content_TickUpdate()
+        {
+
+        }
+
+        public virtual void RenderHide()
         {
             //Дективируем всю панель и панель кнопок
             gameObject.SetActive(false);
             buttonsGroup.SetActive(false);
 
             //Деактивируем панель содержимого
-            Content_RenderHide(world);
+            Content_RenderHide();
         }
-        public virtual void Content_RenderHide(EcsWorld world)
+        public virtual void Content_RenderHide()
         {
             //Деактивируем панель содержимого
             contentPanel.SetActive(false);
-        }
-
-        public virtual void FiltersAndPools_CheckFilled(EcsWorld world)
-        {
-
-        }
-
-        public virtual void AddSubpanel(
-            UIA_OverviewSubpanel overviewSubpanel,
-            int subpanelIndex)
-        {
-            //Заносим подпанель в словарь и назначаем индекс
-            subpanels.Add(subpanelIndex, overviewSubpanel);
-            overviewSubpanel.SelfType = subpanelIndex;
         }
     }
 }

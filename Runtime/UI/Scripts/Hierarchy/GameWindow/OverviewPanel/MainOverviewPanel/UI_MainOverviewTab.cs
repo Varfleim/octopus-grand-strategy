@@ -1,10 +1,10 @@
 
-using Leopotam.EcsLite;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
     public class UI_MainOverviewTab : UIA_OverviewTab
     {
-        public EcsPackedEntity entPE;
+        public ProtoPackedEntity entPE;
     }
 }

@@ -1,27 +1,28 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_OverviewPanel_Update : IEcsRunSystem
+    public class S_OverviewPanel_Update : IProtoRunSystem
     {
-        readonly EcsCustomInject<UI_Core> uI_Core = default;
+        [DI] A_UI uI_A;
 
-        public void Run(IEcsSystems systems)
+        [DI] UI_Data uI_Data;
+
+        public void Run()
         {
             //Обновляем панели
             OPs_Update();
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewPanel_Update>> oP_Update_R_F = default;
         void OPs_Update()
         {
             //Для каждого запроса обновления обзорной панели
-            foreach(int rEntity in oP_Update_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oP_Update_R_I)
             {
                 //Берём запрос
-                ref R_OverviewPanel_Update rComp = ref oP_Update_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewPanel_Update rComp = ref uI_A.oP_Update_R_P.Get(rEntity);
 
                 //Обновляем панель
                 OP_Update(ref rComp);
@@ -31,15 +32,11 @@ namespace GS.UI
             }
         }
 
-        readonly EcsPoolInject<SR_Block_Update> b_Update_SR_P = default;
         void OP_Update(
             ref R_OverviewPanel_Update rComp)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель
-            UIA_OverviewPanel overviewPanel = gameWindow.overviewPanels[rComp.panelType];
+            UIA_OverviewPanel overviewPanel = uI_Data.oPsIndexToObjectDict[rComp.panelType];
 
             //Если панель активна
             if(overviewPanel.gameObject.activeInHierarchy)
@@ -60,9 +57,7 @@ namespace GS.UI
                         for(int a = 0; a < overviewTab.blockEntities.Count; a++)
                         {
                             //Запрашиваем обновление для сущности блока
-                            UI_Data.Block_Update_SR(
-                                overviewTab.blockEntities[a],
-                                b_Update_SR_P.Value);
+                            uI_A.Block_Update_SR(overviewTab.blockEntities[a]);
                         }
                     }
                 }

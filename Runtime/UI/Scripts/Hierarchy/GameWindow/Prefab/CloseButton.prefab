@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4939226977620975883}
   - component: {fileID: 1482529690509186789}
   - component: {fileID: 3190761385405981772}
-  - component: {fileID: 948226781129766309}
+  - component: {fileID: 4697490094512210664}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &948226781129766309
+--- !u!114 &4697490094512210664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,12 +131,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 605483826965485819}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b6b406923f44eb196499bd257618bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb8e5f934b6b4b0c9d4cc4585209c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _widgetName: 
-  _emitter: {fileID: 0}
-  _nameRegistrationType: 0
+  _senderName: 
+  _worldName: 
   _selectable: {fileID: 0}
 --- !u!1 &3955865117843920831
 GameObject:
@@ -230,7 +229,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.8
+  m_fontSize: 59.3
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

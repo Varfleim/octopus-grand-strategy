@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 using TMPro;
 
+using Leopotam.EcsProto;
+
 namespace GS.UI
 {
     public class UI_BlockList_ElementPanel : MonoBehaviour
@@ -16,6 +18,6 @@ namespace GS.UI
         public VerticalLayoutGroup layoutGroup;
         public List<UI_BlockList_ElementValuePanel> elementValues = new();
 
-        public int elementEntity;
+        public ProtoEntity elementEntity;
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6340880111230696645}
   - component: {fileID: 8432070905333890721}
   - component: {fileID: 9043267364379109301}
-  - component: {fileID: 1009592438905661165}
+  - component: {fileID: 5525378062385713291}
   m_Layer: 5
   m_Name: OutlinerSubpanelButton
   m_TagString: Untagged
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonNameText: {fileID: 2456440291353021832}
---- !u!114 &1009592438905661165
+--- !u!114 &5525378062385713291
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,12 +145,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2513735335835094692}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b6b406923f44eb196499bd257618bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb8e5f934b6b4b0c9d4cc4585209c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _widgetName: 
-  _emitter: {fileID: 0}
-  _nameRegistrationType: 0
+  _senderName: 
+  _worldName: 
   _selectable: {fileID: 0}
 --- !u!1 &9009352210550864354
 GameObject:
@@ -244,7 +243,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 41.6
+  m_fontSize: 18
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

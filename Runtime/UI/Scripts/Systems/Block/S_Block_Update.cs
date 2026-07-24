@@ -3,34 +3,35 @@ using System;
 
 using UnityEngine;
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Block_Update : IEcsRunSystem
+    public class S_Block_Update : IProtoRunSystem
     {
-        readonly EcsCustomInject<UI_Data> uI_Data = default;
+        [DI] A_UI uI_A;
 
-        public void Run(IEcsSystems systems)
+        [DI] UI_Data uI_Data;
+
+        public void Run()
         {
             //Обновляем блоки-списки
             BlockLists_Update();
         }
 
-        readonly EcsFilterInject<Inc<C_BlockList, SR_Block_Update>> bL_Update_SR_F = default;
         void BlockLists_Update()
         {
             //Для каждого запроса обновления блока-списка
-            foreach(int blockEntity in bL_Update_SR_F.Value)
+            foreach(ProtoEntity blockEntity in uI_A.bL_Update_SR_I)
             {
                 //Берём блок
-                ref C_BlockList bL = ref bL_Update_SR_F.Pools.Inc1.Get(blockEntity);
+                ref C_BlockList bL = ref uI_A.bL_P.Get(blockEntity);
 
                 //Обновляем блок
                 BlockList_Update(ref bL);
 
-                bL_Update_SR_F.Pools.Inc2.Del(blockEntity);
+                uI_A.b_Update_SR_P.Del(blockEntity);
             }
         }
 
@@ -91,7 +92,7 @@ namespace GS.UI
             else
             {
                 //Создаём новую панель
-                elementPanel = GameObject.Instantiate(uI_Data.Value.blockListElementPanelPrefab);
+                elementPanel = GameObject.Instantiate(uI_Data.blockListElementPanelPrefab);
             }
 
             //Прикрепляем панель к родителю и отображаем её
@@ -175,7 +176,7 @@ namespace GS.UI
             else
             {
                 //Создаём новую панель
-                elementValuePanel = GameObject.Instantiate(uI_Data.Value.blockListElementValuePanelPrefab);
+                elementValuePanel = GameObject.Instantiate(uI_Data.blockListElementValuePanelPrefab);
             }
 
             //Прикрепляем панель к родителю и отображаем её

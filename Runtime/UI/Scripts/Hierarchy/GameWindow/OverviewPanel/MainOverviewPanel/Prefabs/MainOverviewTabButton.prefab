@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 2665425162872688606}
   - component: {fileID: 5888080816625087595}
   - component: {fileID: 8692875225876785161}
-  - component: {fileID: 5305986839137568516}
+  - component: {fileID: 6823277228212060373}
   m_Layer: 0
   m_Name: MainOverviewTabButton
   m_TagString: Untagged
@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonNameText: {fileID: 1056513806265868496}
---- !u!114 &5305986839137568516
+--- !u!114 &6823277228212060373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,10 +281,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4062264511085911012}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b6b406923f44eb196499bd257618bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb8e5f934b6b4b0c9d4cc4585209c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _widgetName: 
-  _emitter: {fileID: 0}
-  _nameRegistrationType: 0
+  _senderName: 
+  _worldName: 
   _selectable: {fileID: 0}

@@ -1,20 +1,16 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_OverviewPanel_Control : IEcsRunSystem
+    public class S_OverviewPanel_Control : IProtoRunSystem
     {
-        readonly EcsWorldInject world = default;
+        [DI] A_UI uI_A;
 
+        [DI] UI_Data uI_Data;
 
-        readonly EcsPoolInject<R_OverviewPanel_Update> oP_Update_R_P = default;
-
-
-        readonly EcsCustomInject<UI_Core> uI_Core = default;
-
-        public void Run (IEcsSystems systems)
+        public void Run ()
         {
             //Отображаем обзорные панели
             OPs_Show();
@@ -38,14 +34,13 @@ namespace GS.UI
             OTs_Hide();
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewPanel_Show>> oP_Show_R_F = default;
         void OPs_Show()
         {
             //Для каждого запроса отображения обзорной панели
-            foreach (int rEntity in oP_Show_R_F.Value)
+            foreach (ProtoEntity rEntity in uI_A.oP_Show_R_I)
             {
                 //Берём запрос
-                ref R_OverviewPanel_Show rComp = ref oP_Show_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewPanel_Show rComp = ref uI_A.oP_Show_R_P.Get(rEntity);
 
                 //Отображаем панель
                 OP_Show(
@@ -55,22 +50,19 @@ namespace GS.UI
                 //Запрос передаётся дальше, переходя в модуль игры, где могут быть особые функции отображения
 
                 //Запрашиваем обновление данных в панели
-                UI_Data.OverviewP_Update_R(
-                    world.Value,
-                    oP_Update_R_P.Value,
+                uI_A.OverviewP_Update_R(
                     rComp.panelType, 
                     isPanelActive, isContentActive);
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewSubpanel_Show>> oSbp_Show_R_F = default;
         void OSbps_Show()
         {
             //Для каждого запроса отображения обзорной подпанели
-            foreach(int rEntity in oSbp_Show_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oSbp_Show_R_I)
             {
                 //Берём запрос
-                ref R_OverviewSubpanel_Show rComp = ref oSbp_Show_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewSubpanel_Show rComp = ref uI_A.oSbp_Show_R_P.Get(rEntity);
 
                 //Отображаем панель
                 OP_Show(
@@ -86,23 +78,20 @@ namespace GS.UI
                 //Запрос передаётся дальше, переходя в модуль игры, где могут быть особые функции отображения
 
                 //Запрашиваем обновление данных в подпанели
-                UI_Data.OverviewP_Update_R(
-                    world.Value,
-                    oP_Update_R_P.Value,
+                uI_A.OverviewP_Update_R(
                     rComp.panelType,
                     isPanelActive, isPanelContentActive,
                     isSubpanelActive);
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewTab_Show>> oT_Show_R_F = default;
         void OTs_Show()
         {
             //Для каждого запроса отображения обзорной вкладки
-            foreach(int rEntity in oT_Show_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oT_Show_R_I)
             {
                 //Берём запрос
-                ref R_OverviewTab_Show rComp = ref oT_Show_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewTab_Show rComp = ref uI_A.oT_Show_R_P.Get(rEntity);
 
                 //Отображаем панель
                 OP_Show(
@@ -125,9 +114,7 @@ namespace GS.UI
                 //Запрос передаётся дальше, переходя в модуль игры, где могут быть особые функции отображения
 
                 //Запрашиваем обновление данных во вкладке
-                UI_Data.OverviewP_Update_R(
-                    world.Value,
-                    oP_Update_R_P.Value,
+                uI_A.OverviewP_Update_R(
                     rComp.panelType,
                     isPanelActive, isPanelContentActive,
                     isSubpanelActive,
@@ -143,11 +130,8 @@ namespace GS.UI
             isPanelActive = false;
             isContentActive = false;
 
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель
-            if(gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if(uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Если запрошенная панель активна
                 if(overviewPanel.gameObject.activeInHierarchy)
@@ -158,7 +142,7 @@ namespace GS.UI
                 else
                 {
                     //Активируем запрошенную панель
-                    overviewPanel.RenderShow(world.Value);
+                    overviewPanel.RenderShow();
                 }
 
                 //Если требуется активировать панель контента
@@ -173,7 +157,7 @@ namespace GS.UI
                     else
                     {
                         //Активируем запрошенную панель
-                        overviewPanel.Content_RenderShow(world.Value);
+                        overviewPanel.Content_RenderShow();
                     }
                 }
             }
@@ -187,14 +171,11 @@ namespace GS.UI
             //Значение по умолчанию отрицательно
             isSubpanelActive = false;
 
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель
-            if(gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if(uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём соответствующую подпанель
-                if(overviewPanel.subpanels.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
+                if(uI_Data.oSbpsIndexToObjectDict.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
                 {
                     //Если запрошенная подпанель активна
                     if(overviewSubpanel.gameObject.activeInHierarchy
@@ -218,7 +199,7 @@ namespace GS.UI
                         overviewPanel.activeSubpanel = overviewSubpanel;
 
                         //Активируем запрошенную подпанель
-                        overviewSubpanel.RenderShow(world.Value);
+                        overviewSubpanel.RenderShow();
                     }
 
                     //Если требуется активировать вкладку по умолчанию
@@ -233,7 +214,7 @@ namespace GS.UI
                         //else
                         //{
                         //    //Активируем запрошенную панель
-                        //    overviewSubpanel.Content_RenderShow(world.Value);
+                        //    overviewSubpanel.Content_RenderShow(world);
                         //}
 
                         //ТЕСТ
@@ -263,17 +244,14 @@ namespace GS.UI
             //Значение по умолчанию отрицательно
             isTabActive = false;
 
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую вкладку
-            if(gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if(uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём соответствующую подпанель
-                if(overviewPanel.subpanels.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
+                if(uI_Data.oSbpsIndexToObjectDict.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
                 {
                     //Берём соответствующую вкладку
-                    if(overviewSubpanel.tabs.TryGetValue(tabType, out UIA_OverviewTab overviewTab))
+                    if(uI_Data.oTsIndexToObjectDict.TryGetValue(tabType, out UIA_OverviewTab overviewTab))
                     {
                         //Если запрошенная вкладка активна
                         if(overviewTab.gameObject.activeInHierarchy
@@ -298,21 +276,20 @@ namespace GS.UI
                             overviewSubpanel.activeTab = overviewTab;
 
                             //Активируем запрошенную вкладку
-                            overviewTab.RenderShow(world.Value);
+                            overviewTab.RenderShow();
                         }
                     }
                 }
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewPanel_Hide>> oPanel_Hide_R_F = default;
         void OPs_Hide()
         {
             //Для каждого запроса сокрытия обзорной панели
-            foreach (int rEntity in oPanel_Hide_R_F.Value)
+            foreach (ProtoEntity rEntity in uI_A.oP_Hide_R_I)
             {
                 //Берём запрос
-                ref R_OverviewPanel_Hide rComp = ref oPanel_Hide_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewPanel_Hide rComp = ref uI_A.oP_Hide_R_P.Get(rEntity);
 
                 //Скрываем панель
                 OP_Hide(
@@ -322,14 +299,13 @@ namespace GS.UI
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewPanel_Content_Hide>> oPanel_Content_Hide_R_F = default;
         void OPs_Content_Hide()
         {
             //Для каждого запроса сокрытия контента обзорной панели
-            foreach(int rEntity in oPanel_Content_Hide_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oP_Content_Hide_R_I)
             {
                 //Берём запрос
-                ref R_OverviewPanel_Content_Hide rComp = ref oPanel_Content_Hide_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewPanel_Content_Hide rComp = ref uI_A.oP_Content_Hide_R_P.Get(rEntity);
 
                 //Скрываем панель контента
                 OP_Content_Hide(
@@ -339,14 +315,13 @@ namespace GS.UI
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewSubpanel_Hide>> oSbp_Hide_R_F = default;
         void OSbps_Hide()
         {
             //Для каждого запроса сокрытия обзорной подпанели
-            foreach(int rEntity in oSbp_Hide_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oSbp_Hide_R_I)
             {
                 //Берём запрос
-                ref R_OverviewSubpanel_Hide rComp = ref oSbp_Hide_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewSubpanel_Hide rComp = ref uI_A.oSbp_Hide_R_P.Get(rEntity);
 
                 //Скрываем панель
                 OSbp_Hide(
@@ -357,14 +332,13 @@ namespace GS.UI
             }
         }
 
-        readonly EcsFilterInject<Inc<R_OverviewTab_Hide>> oT_Hide_R_F = default;
         void OTs_Hide()
         {
             //Для каждого запроса сокрытия обзорной вкладки
-            foreach(int rEntity in oT_Hide_R_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.oT_Hide_R_I)
             {
                 //Берём запрос
-                ref R_OverviewTab_Hide rComp = ref oT_Hide_R_F.Pools.Inc1.Get(rEntity);
+                ref R_OverviewTab_Hide rComp = ref uI_A.oT_Hide_R_P.Get(rEntity);
 
                 //Скрываем панель
                 OT_Hide(
@@ -379,11 +353,8 @@ namespace GS.UI
         void OP_Hide(
             int panelType)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель 
-            if (gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if (uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём активную подпанель
                 if (overviewPanel.activeSubpanel != null)
@@ -399,29 +370,26 @@ namespace GS.UI
                         overviewSubpanel.activeTab = null;
 
                         //Закрываем её
-                        overviewTab.RenderHide(world.Value);
+                        overviewTab.RenderHide();
                     }
 
                     //Убираем активную подпанель
                     overviewPanel.activeSubpanel = null;
 
                     //Закрываем её
-                    overviewSubpanel.RenderHide(world.Value);
+                    overviewSubpanel.RenderHide();
                 }
 
                 //Закрываем панель
-                overviewPanel.RenderHide(world.Value);
+                overviewPanel.RenderHide();
             }
         }
 
         void OP_Content_Hide(
             int panelType)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель 
-            if (gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if (uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём активную подпанель
                 if (overviewPanel.activeSubpanel != null)
@@ -437,18 +405,18 @@ namespace GS.UI
                         overviewSubpanel.activeTab = null;
 
                         //Закрываем её
-                        overviewTab.RenderHide(world.Value);
+                        overviewTab.RenderHide();
                     }
 
                     //Убираем активную подпанель
                     overviewPanel.activeSubpanel = null;
 
                     //Закрываем её
-                    overviewSubpanel.RenderHide(world.Value);
+                    overviewSubpanel.RenderHide();
                 }
 
                 //Закрываем панель контента
-                overviewPanel.Content_RenderHide(world.Value);
+                overviewPanel.Content_RenderHide();
             }
         }
 
@@ -456,14 +424,11 @@ namespace GS.UI
             int panelType,
             int subpanelType)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель
-            if (gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if (uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём соответствующую подпанель
-                if (overviewPanel.subpanels.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
+                if (uI_Data.oSbpsIndexToObjectDict.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
                 {
                     //Берём активную вкладку
                     if (overviewSubpanel.activeTab != null)
@@ -474,14 +439,14 @@ namespace GS.UI
                         overviewSubpanel.activeTab = null;
 
                         //Закрываем её
-                        overviewTab.RenderHide(world.Value);
+                        overviewTab.RenderHide();
                     }
 
                     //Убираем активную подпанель
                     overviewPanel.activeSubpanel = null;
 
                     //Закрываем её
-                    overviewSubpanel.RenderHide(world.Value);
+                    overviewSubpanel.RenderHide();
                 }
             }
         }
@@ -491,23 +456,20 @@ namespace GS.UI
             int subpanelType,
             int tabType)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
-
             //Берём соответствующую панель
-            if (gameWindow.overviewPanels.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
+            if (uI_Data.oPsIndexToObjectDict.TryGetValue(panelType, out UIA_OverviewPanel overviewPanel))
             {
                 //Берём соответствующую подпанель
-                if (overviewPanel.subpanels.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
+                if (uI_Data.oSbpsIndexToObjectDict.TryGetValue(subpanelType, out UIA_OverviewSubpanel overviewSubpanel))
                 {
                     //Берём соответствующую вкладку
-                    if (overviewSubpanel.tabs.TryGetValue(tabType, out UIA_OverviewTab overviewTab))
+                    if (uI_Data.oTsIndexToObjectDict.TryGetValue(tabType, out UIA_OverviewTab overviewTab))
                     {
                         //Убираем активную вкладку
                         overviewSubpanel.activeTab = null;
 
                         //Закрываем её
-                        overviewTab.RenderHide(world.Value);
+                        overviewTab.RenderHide();
                     }
                 }
             }

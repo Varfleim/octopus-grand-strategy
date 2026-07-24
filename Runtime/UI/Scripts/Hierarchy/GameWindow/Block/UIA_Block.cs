@@ -1,10 +1,13 @@
+
 using UnityEngine;
+
+using Leopotam.EcsProto;
 
 namespace GS.UI
 {
     public class UIA_Block : MonoBehaviour
     {
-        public int SelfEntity
+        public ProtoEntity SelfEntity
         {
             get
             {
@@ -15,6 +18,6 @@ namespace GS.UI
                 selfEntity = value;
             }
         }
-        private int selfEntity;
+        private ProtoEntity selfEntity;
     }
 }

@@ -1,64 +1,47 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
-using Leopotam.EcsLite.Unity.Ugui;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
+using Leopotam.EcsProto.Unity.Ugui;
 
 namespace GS.UI
 {
-    public class S_MainOverviewPanel_Input : IEcsInitSystem, IEcsRunSystem
+    public class S_MainOverviewPanel_Input : IProtoRunSystem
     {
-        readonly EcsWorldInject world = default;
+        [DI] UnityUguiAspect unityUgui_A;
+        [DI] ProtoIt click_E_I = new(It.Inc<UnityUguiClickEvent>());
 
+        [DI] A_UI uI_A;
 
-        EcsWorld uguiUIWorld;
-        EcsFilter clickEventUI_F;
-        EcsPool<EcsUguiClickEvent> clickEventUI_P;
+        [DI] UI_Data uI_Data;
 
-
-        readonly EcsCustomInject<UI_Data> uI_Data = default;
-
-        readonly EcsCustomInject<UI_Core> uI_Core = default;
-
-        public void Init(IEcsSystems systems)
-        {
-            uguiUIWorld = systems.GetWorld("uguiUIEventsWorld");
-
-            clickEventUI_P = uguiUIWorld.GetPool<EcsUguiClickEvent>();
-            clickEventUI_F = uguiUIWorld.Filter<EcsUguiClickEvent>().End();
-        }
-
-        public void Run(IEcsSystems systems)
+        public void Run()
         {
             //Проверяем клики в главной обзорной панели
             MainOverviewPanel_ClickAction();
         }
 
-        readonly EcsPoolInject<R_OverviewPanel_Content_Hide> oP_Content_Hide_R_P = default;
         void MainOverviewPanel_ClickAction()
         {
             //Берём главную обзорную панель
-            UI_MainOverviewPanel mainOverviewPanel = (UI_MainOverviewPanel)uI_Core.Value.gameWindow.overviewPanels[uI_Data.Value.mainOverviewPanel.SelfType];
+            UI_MainOverviewPanel mainOverviewPanel = (UI_MainOverviewPanel)uI_Data.oPsIndexToObjectDict[uI_Data.mainOverviewPanel.SelfType];
 
             //Если она активна
             if (mainOverviewPanel.gameObject.activeInHierarchy)
             {
                 //Для каждого события клика по интерфейсу
-                foreach (int clickEventUIEntity in clickEventUI_F)
+                foreach (ProtoEntity clickEventUIEntity in click_E_I)
                 {
                     //Берём событие
-                    ref EcsUguiClickEvent clickEvent = ref clickEventUI_P.Get(clickEventUIEntity);
+                    ref UnityUguiClickEvent clickEvent = ref unityUgui_A.ClickEvent.Get(clickEventUIEntity);
 
                     //Проверяем, было ли совершено какое-либо действие
                     bool isActionComplete = false;
 
                     //Если нажата кнопка закрытия панели
-                    if (clickEvent.WidgetName == "CloseMainOverviewPanel")
+                    if (clickEvent.SenderName == "CloseMainOverviewPanel")
                     {
                         //Запрашиваем её сокрытие
-                        UI_Data.OverviewP_Content_Hide_R(
-                            world.Value,
-                            oP_Content_Hide_R_P.Value,
-                            mainOverviewPanel.SelfType);
+                        uI_A.OverviewP_Content_Hide_R(mainOverviewPanel.SelfType);
 
                         //Отмечаем, что действие было совершено
                         isActionComplete = true;
@@ -74,10 +57,10 @@ namespace GS.UI
                     //Если действие было совершено
                     if (isActionComplete)
                     {
-                        UnityEngine.Debug.LogWarning("Click! " + clickEvent.WidgetName);
+                        UnityEngine.Debug.LogWarning("Click! " + clickEvent.SenderName);
 
                         //Удаляем событие
-                        clickEventUI_P.Del(clickEventUIEntity);
+                        unityUgui_A.ClickEvent.Del(clickEventUIEntity);
                     }
                 }
             }

@@ -1,29 +1,20 @@
 
 using UnityEngine;
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
-using Leopotam.EcsLite.Unity.Ugui;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
+using Leopotam.EcsProto.Unity.Ugui;
 
 namespace GS.UI
 {
-    public class S_Block_Input : IEcsInitSystem, IEcsRunSystem
+    public class S_Block_Input : IProtoRunSystem
     {
-        EcsWorldInject world = default;
+        [DI] UnityUguiAspect unityUgui_A;
+        [DI] ProtoIt click_E_I = new(It.Inc<UnityUguiClickEvent>());
 
-        EcsWorld uguiUIWorld;
-        EcsFilter clickEventUI_F;
-        EcsPool<EcsUguiClickEvent> clickEventUI_P;
+        [DI] A_UI uI_A;
 
-        public void Init(IEcsSystems systems)
-        {
-            uguiUIWorld = systems.GetWorld("uguiUIEventsWorld");
-
-            clickEventUI_P = uguiUIWorld.GetPool<EcsUguiClickEvent>();
-            clickEventUI_F = uguiUIWorld.Filter<EcsUguiClickEvent>().End();
-        }
-
-        public void Run(IEcsSystems systems)
+        public void Run()
         {
             //Проверяем клики в блоках
             Blocks_ClickAction();
@@ -32,16 +23,16 @@ namespace GS.UI
         void Blocks_ClickAction()
         {
             //Для каждого события клика по инитерфейсу
-            foreach (int clickEventEntity in clickEventUI_F)
+            foreach (ProtoEntity clickEventEntity in click_E_I)
             {
                 //Берём событие
-                ref EcsUguiClickEvent clickEvent = ref clickEventUI_P.Get(clickEventEntity);
+                ref UnityUguiClickEvent clickEvent = ref unityUgui_A.ClickEvent.Get(clickEventEntity);
 
                 //Проверяем, было ли совершено какое-либо действие
                 bool isActionComplete = false;
 
                 //Если название кнопки пусто
-                if(clickEvent.WidgetName == "")
+                if(clickEvent.SenderName == "")
                 {
                     //Если родительский объект - блок-список
                     if(clickEvent.Sender.transform.parent.TryGetComponent(out UI_BlockList parentBlockList))
@@ -63,26 +54,24 @@ namespace GS.UI
                 //Если действие было совершено
                 if (isActionComplete)
                 {
-                    UnityEngine.Debug.LogWarning("Click! " + clickEvent.WidgetName);
+                    UnityEngine.Debug.LogWarning("Click! " + clickEvent.SenderName);
 
                     //Удаляем событие
-                    clickEventUI_P.Del(clickEventEntity);
+                    unityUgui_A.ClickEvent.Del(clickEventEntity);
                 }
             }
         }
 
-        readonly EcsPoolInject<R_BlockList_Action> bL_Action_R_P = default;
         void BlockList_Action_R(
-            int blockEntity,
+            ProtoEntity bEntity,
             GameObject actionObject)
         {
             //Создаём новую сущность и назначаем ей запрос действия блока-списка
-            int rEntity = world.Value.NewEntity();
-            ref R_BlockList_Action rComp = ref bL_Action_R_P.Value.Add(rEntity);
+            ref R_BlockList_Action rComp = ref uI_A.bL_Action_R_P.NewEntity(out ProtoEntity rEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                blockEntity,
+                bEntity,
                 actionObject);
         }
     }

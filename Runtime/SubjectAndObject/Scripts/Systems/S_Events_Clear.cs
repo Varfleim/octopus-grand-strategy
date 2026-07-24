@@ -1,44 +1,44 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.SubjectAndObject
 {
-    public class S_Events_Clear : IEcsInitSystem, IEcsRunSystem
+    public class S_Events_Clear : IProtoInitSystem, IProtoRunSystem
     {
-        public void Init(IEcsSystems systems)
+        [DI] A_SubjectAndObject subjectAndObject_A;
+
+        public void Init(IProtoSystems systems)
         {
             //Очищаем события объектов и субъектов
             Object_Events_Clear();
             Subject_Events_Clear();
         }
 
-        public void Run(IEcsSystems systems)
+        public void Run()
         {
             //Очищаем события объектов и субъектов
             Object_Events_Clear();
             Subject_Events_Clear();
         }
 
-        readonly EcsFilterInject<Inc<SE_Object_Created>> object_Created_SE_F = default;
         void Object_Events_Clear()
         {
             //Для каждого события создания объекта
-            foreach (int eEntity in object_Created_SE_F.Value)
+            foreach (ProtoEntity eEntity in subjectAndObject_A.obj_Created_SE_I)
             {
                 //Удаляем компонент события
-                object_Created_SE_F.Pools.Inc1.Del(eEntity);
+                subjectAndObject_A.obj_Created_SE_P.Del(eEntity);
             }
         }
 
-        readonly EcsFilterInject<Inc<SE_Subject_Created>> subject_Created_SE_F = default;
         void Subject_Events_Clear()
         {
             //Для каждого события создания субъекта
-            foreach (int eEntity in subject_Created_SE_F.Value)
+            foreach (ProtoEntity eEntity in subjectAndObject_A.subj_Created_SE_I)
             {
                 //Удаляем компонент события
-                subject_Created_SE_F.Pools.Inc1.Del(eEntity);
+                subjectAndObject_A.subj_Created_SE_P.Del(eEntity);
             }
         }
     }

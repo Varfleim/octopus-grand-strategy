@@ -1,31 +1,30 @@
 
 using UnityEngine;
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Block_Creation : IEcsInitSystem
+    public class S_Block_Creation : IProtoInitSystem
     {
-        readonly EcsCustomInject<UI_Data> uI_Data = default;
+        [DI] A_UI uI_A;
 
-        readonly EcsCustomInject<UI_Core> uI_Core = default;
+        [DI] UI_Data uI_Data;
 
-        public void Init(IEcsSystems systems)
+        public void Init(IProtoSystems systems)
         {
             //Создаём блоки-списки
             BlockLists_Creation();
         }
 
-        readonly EcsFilterInject<Inc<SR_BlockList_Creation>> bL_Creation_SR_F = default;
         void BlockLists_Creation()
         {
             //Для каждого запроса создания блока-списка
-            foreach(int rEntity in bL_Creation_SR_F.Value)
+            foreach(ProtoEntity rEntity in uI_A.bL_Creation_SR_I)
             {
                 //Берём запрос
-                ref SR_BlockList_Creation rComp = ref bL_Creation_SR_F.Pools.Inc1.Get(rEntity);
+                ref SR_BlockList_Creation rComp = ref uI_A.bL_Creation_SR_P.Get(rEntity);
 
                 //Создаём блок
                 BlockList_Creation(
@@ -33,39 +32,39 @@ namespace GS.UI
                     ref rComp);
 
                 //Удаляем запрос
-                bL_Creation_SR_F.Pools.Inc1.Del(rEntity);
+                uI_A.bL_Creation_SR_P.Del(rEntity);
             }
         }
 
-        readonly EcsPoolInject<C_BlockList> bL_P = default;
         void BlockList_Creation(
-            int blockEntity,
+            ProtoEntity blockEntity,
             ref SR_BlockList_Creation rComp)
         {
-            //Берём окно игры
-            UI_GameWindow gameWindow = uI_Core.Value.gameWindow;
+            if(uI_Data.OP_GetByCode(rComp.parentPanelCode, out UIA_OverviewPanel parentOP))
+            {
+                if(uI_Data.OSbp_GetByCode(rComp.parentSubpanelCode, out UIA_OverviewSubpanel parentOSbp))
+                {
+                    if(uI_Data.OT_GetByCode(rComp.parentTabCode, out UIA_OverviewTab parentOT))
+                    {
+                        //Назначаем сущности компонент блока-списка
+                        ref C_BlockList bL = ref uI_A.bL_P.Add(blockEntity);
 
-            //Берём родительскую панель, подпанель, вкладку
-            UIA_OverviewPanel overviewPanel = gameWindow.overviewPanels[rComp.parentPanelType];
-            UIA_OverviewSubpanel overviewSubpanel = overviewPanel.subpanels[rComp.parentSubpanelType];
-            UIA_OverviewTab overviewTab = overviewSubpanel.tabs[rComp.parentTabType];
+                        //Заполняем основные данные блока
+                        bL = new(0);
 
-            //Назначаем сущности компонент блока-списка
-            ref C_BlockList bL = ref bL_P.Value.Add(blockEntity);
+                        //Инстанциируем префаб блока и сразу заносим его во вкладку
+                        bL.selfPanel = Block_Instantiate(
+                            uI_Data.blockListPrefab,
+                            parentOT.layoutGroup.transform) as UI_BlockList;
 
-            //Заполняем основные данные блока
-            bL = new(0);
+                        //Сохраняем сущность блока
+                        bL.selfPanel.SelfEntity = blockEntity;
 
-            //Инстанциируем префаб блока и сразу заносим его в панель
-            bL.selfPanel = Block_Instantiate(
-                uI_Data.Value.blockListPrefab,
-                overviewTab.layoutGroup.transform) as UI_BlockList;
-
-            //Сохраняем сущность блока
-            bL.selfPanel.SelfEntity = blockEntity;
-
-            //Заносим сущность блока в список блоков вкладки
-            overviewTab.blockEntities.Add(blockEntity);
+                        //Заносим сущность блока в список блоков вкладки
+                        parentOT.blockEntities.Add(blockEntity);
+                    }
+                }
+            }
         }
 
         UIA_Block Block_Instantiate(

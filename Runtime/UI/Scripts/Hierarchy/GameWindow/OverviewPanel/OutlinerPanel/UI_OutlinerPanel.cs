@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 
-using TMPro;
-
-using Leopotam.EcsLite;
+using Leopotam.EcsProto;
 
 namespace GS.UI
 {
@@ -10,11 +8,11 @@ namespace GS.UI
     {
         internal Dictionary<int, UI_OutlinerTab> tabs = new();
 
-        public override void RenderHide(EcsWorld world)
+        public override void RenderHide()
         {
             UnityEngine.Debug.LogWarning("! !");
 
-            base.RenderHide(world);
+            base.RenderHide();
         }
     }
 }

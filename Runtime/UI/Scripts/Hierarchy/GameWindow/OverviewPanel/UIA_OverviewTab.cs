@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using Leopotam.EcsLite;
+using Leopotam.EcsProto;
 
 namespace GS.UI
 {
@@ -25,31 +25,31 @@ namespace GS.UI
 
         protected bool isFiltersAndPoolsFilled;
 
-        internal List<int> blockEntities = new();
+        internal List<ProtoEntity> blockEntities = new();
         public VerticalLayoutGroup layoutGroup;
 
-        public virtual void RenderShow(EcsWorld world)
+        public virtual void RenderShow()
         {
             //Активируем вкладку
             gameObject.SetActive(true);
         }
 
-        public virtual void RenderUpdate(EcsWorld world)
+        public virtual void RenderUpdate()
         {
 
         }
-        public virtual void TickUpdate(EcsWorld world)
+        public virtual void TickUpdate()
         {
 
         }
 
-        public virtual void RenderHide(EcsWorld world)
+        public virtual void RenderHide()
         {
             //Деактивируем вкладку
             gameObject.SetActive(false);
         }
 
-        public virtual void FiltersAndPools_CheckFilled(EcsWorld world)
+        public virtual void FiltersAndPools_CheckFilled()
         {
 
         }

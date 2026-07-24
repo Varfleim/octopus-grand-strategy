@@ -1,12 +1,14 @@
 
 using UnityEngine;
 
+using Leopotam.EcsProto;
+
 namespace GS.UI
 {
     public readonly struct R_BlockList_Action
     {
         public R_BlockList_Action(
-            int blockEntity,
+            ProtoEntity blockEntity,
             GameObject actionObject)
         {
             this.blockEntity = blockEntity;
@@ -14,7 +16,7 @@ namespace GS.UI
             this.actionObject = actionObject;
         }
 
-        public readonly int blockEntity;
+        public readonly ProtoEntity blockEntity;
 
         public readonly GameObject actionObject;
     }

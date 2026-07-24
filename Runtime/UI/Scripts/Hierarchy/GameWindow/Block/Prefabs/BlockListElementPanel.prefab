@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7232166082601452240}
   - component: {fileID: 3705613439180359968}
   - component: {fileID: 5727602518855951723}
-  - component: {fileID: 315496536422687261}
+  - component: {fileID: 5088064264501396223}
   m_Layer: 5
   m_Name: BlockListElementPanel
   m_TagString: Untagged
@@ -136,7 +136,7 @@ MonoBehaviour:
   layoutGroup: {fileID: 7232166082601452240}
   elementValues: []
   elementEntity: 0
---- !u!114 &315496536422687261
+--- !u!114 &5088064264501396223
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,12 +145,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3033803953793379627}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b6b406923f44eb196499bd257618bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb8e5f934b6b4b0c9d4cc4585209c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _widgetName: 
-  _emitter: {fileID: 0}
-  _nameRegistrationType: 0
+  _senderName: 
+  _worldName: 
   _selectable: {fileID: 0}
 --- !u!1 &7224927994064311668
 GameObject:

@@ -1,30 +1,39 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Threads;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
+using Leopotam.EcsProto.Threads;
 
 namespace GS.UI
 {
-    public class SMT_BlockList_PreUpdate : EcsThreadSystem<T_BlockList_PreUpdate, 
-        C_BlockList>
+    public class SMT_BlockList_PreUpdate : IProtoRunSystem
     {
-        protected override int GetChunkSize(IEcsSystems systems)
+        [DI] A_UI uI_A;
+
+        ProtoThreadHandler threadHandler;
+
+        public void Run()
         {
-            return 1;
+            //Запускаем параллельную обработку
+            uI_A.bL_Update_SR_I.RunParallel(threadHandler ??= Threads_Handling, 1);
         }
 
-        protected override EcsWorld GetWorld(IEcsSystems systems)
+        void Threads_Handling(ProtoThreadIt threadIt)
         {
-            return systems.GetWorld();
+            //Для каждого блока-списка, требующего обновления
+            foreach(ProtoEntity bEntity in threadIt)
+            {
+                //Берём блок
+                ref C_BlockList bL = ref uI_A.bL_P.Get(bEntity);
+
+                //Сортируем элементы по указанному параметру
+                Elements_Sort(ref bL);
+            }
         }
 
-        protected override EcsFilter GetFilter(EcsWorld world)
+        void Elements_Sort(
+            ref C_BlockList bL)
         {
-            return world.Filter<C_BlockList>().Inc<SR_Block_Update>().End();
-        }
-
-        protected override void SetData(IEcsSystems systems, ref T_BlockList_PreUpdate thread)
-        {
-            //Здесь должно быть обращение к файлу данных, описывающему параметры
+            bL.currentElements.Sort(bL.comparer);
         }
     }
 }

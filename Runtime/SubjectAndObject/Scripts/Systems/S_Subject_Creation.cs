@@ -1,64 +1,62 @@
 
-using Leopotam.EcsLite;
-using Leopotam.EcsLite.Di;
+using Leopotam.EcsProto;
+using Leopotam.EcsProto.QoL;
 
 namespace GS.SubjectAndObject
 {
-    public class S_Subject_Creation : IEcsInitSystem, IEcsRunSystem
+    public class S_Subject_Creation : IProtoInitSystem, IProtoRunSystem
     {
-        public void Init(IEcsSystems systems)
+        [DI] A_SubjectAndObject subjectAndObject_A;
+
+        public void Init(IProtoSystems systems)
         {
             //Создаём субъекты
             Subjects_Creation();
         }
 
-        public void Run(IEcsSystems systems)
+        public void Run()
         {
             //Создаём субъекты
             Subjects_Creation();
         }
 
-        readonly EcsFilterInject<Inc<SR_Subject_Creation>> subject_Creation_SR_F = default;
         void Subjects_Creation()
         {
             //Для каждого запроса создания субъекта
-            foreach (int subjectRequestEntity in subject_Creation_SR_F.Value)
+            foreach (ProtoEntity subjReqEntity in subjectAndObject_A.subj_Creation_SR_I)
             {
                 //Берём запрос
-                ref SR_Subject_Creation rComp = ref subject_Creation_SR_F.Pools.Inc1.Get(subjectRequestEntity);
+                ref SR_Subject_Creation rComp = ref subjectAndObject_A.subj_Creation_SR_P.Get(subjReqEntity);
 
                 //Создаём субъект
                 Subject_Creation(
                     ref rComp,
-                    subjectRequestEntity);
+                    subjReqEntity);
 
                 //Удаляем запрос
-                subject_Creation_SR_F.Pools.Inc1.Del(subjectRequestEntity);
+                subjectAndObject_A.subj_Creation_SR_P.Del(subjReqEntity);
             }
         }
 
-        readonly EcsPoolInject<C_Subject> subject_P = default;
         void Subject_Creation(
             ref SR_Subject_Creation rComp,
-            int subjectEntity)
+            ProtoEntity subjEntity)
         {
-            //Назначаем сущность компонент субъекта и заполняем его данные
-            ref C_Subject subj = ref subject_P.Value.Add(subjectEntity);
+            //Назначаем сущности компонент субъекта и заполняем его данные
+            ref C_Subject subj = ref subjectAndObject_A.subj_P.Add(subjEntity);
             subj = new(0);
 
             UnityEngine.Debug.LogWarning("Subject Created!");
 
             //Создаём самособытие, сообщающее о создании субъекта
-            Subject_Created_SE(
-                subjectEntity);
+            Subject_Created_SE(subjEntity);
         }
 
-        readonly EcsPoolInject<SE_Subject_Created> subject_Created_SE_P = default;
         void Subject_Created_SE(
-            int subjectEntity)
+            ProtoEntity subjEntity)
         {
             //Назначаем сущности компонент события и заполняем его данные
-            ref SE_Subject_Created eComp = ref subject_Created_SE_P.Value.Add(subjectEntity);
+            ref SE_Subject_Created eComp = ref subjectAndObject_A.subj_Created_SE_P.Add(subjEntity);
             eComp = new(0);
         }
     }

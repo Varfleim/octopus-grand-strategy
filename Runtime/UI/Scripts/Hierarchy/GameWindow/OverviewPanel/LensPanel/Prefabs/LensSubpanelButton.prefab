@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 6863335399003594342}
   - component: {fileID: 4220028025794081095}
   - component: {fileID: 3757953391073238215}
-  - component: {fileID: 350313154429492224}
+  - component: {fileID: 7826184335669299426}
   m_Layer: 5
   m_Name: LensSubpanelButton
   m_TagString: Untagged
@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonNameText: {fileID: 6242613201232876959}
---- !u!114 &350313154429492224
+--- !u!114 &7826184335669299426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,10 +281,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6862631312864232141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44b6b406923f44eb196499bd257618bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cb8e5f934b6b4b0c9d4cc4585209c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _widgetName: 
-  _emitter: {fileID: 0}
-  _nameRegistrationType: 0
+  _senderName: 
+  _worldName: 
   _selectable: {fileID: 0}

@@ -4,21 +4,15 @@ namespace GS.UI
     public readonly struct SR_BlockList_Creation
     {
         public SR_BlockList_Creation(
-            int parentPanelType, 
-            int parentSubpanelType, 
-            int parentTabType)
+            string parentPanelCode, string parentSubpanelCode, string parentTabCode)
         {
-            this.parentPanelType = parentPanelType;
-
-            this.parentSubpanelType = parentSubpanelType;
-
-            this.parentTabType = parentTabType;
+            this.parentPanelCode = parentPanelCode;
+            this.parentSubpanelCode = parentSubpanelCode;
+            this.parentTabCode = parentTabCode;
         }
 
-        public readonly int parentPanelType;
-
-        public readonly int parentSubpanelType;
-
-        public readonly int parentTabType;
+        public readonly string parentPanelCode;
+        public readonly string parentSubpanelCode;
+        public readonly string parentTabCode;
     }
 }
