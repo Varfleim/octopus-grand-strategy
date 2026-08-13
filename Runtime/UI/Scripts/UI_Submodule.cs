@@ -19,49 +19,60 @@ namespace GS.UI
             //Добавляем системы инициализации
             #region Init
             //Инициализация обзорных панелей
-            startup.InitSystem_Add(new S_OverviewPanel_Initialization());
+            startup.InitSystem_Add(
+                System_New<S_OverviewPanel_Initialization>(SystemWeight.SystemWeight));
 
             //Создание блоков 
-            startup.InitSystem_Add(new S_Block_Creation());
+            startup.InitSystem_Add(
+                System_New<S_Block_Creation>(SystemWeight.SystemWeight));
             #endregion
 
             //Добавляем покадровые системы
             #region Frame
             //Ввод в обзорных панелях
-            startup.FrameSystem_Add(new S_OverviewPanel_Input());
+            startup.FrameSystem_Add(
+                System_New<S_OverviewPanel_Input>(SystemWeight.SystemWeight));
             //Ввод в главной обзорной панели
-            startup.FrameSystem_Add(new S_MainOverviewPanel_Input());
+            startup.FrameSystem_Add(
+                System_New<S_MainOverviewPanel_Input>(SystemWeight.SystemWeight));
             //Ввод в панели планировщика
-            startup.FrameSystem_Add(new S_OutlinerPanel_Input());
+            startup.FrameSystem_Add(
+                System_New<S_OutlinerPanel_Input>(SystemWeight.SystemWeight));
             //Ввод в панели линз
-            startup.FrameSystem_Add(new S_LensPanel_Input());
+            startup.FrameSystem_Add(
+                System_New<S_LensPanel_Input>(SystemWeight.SystemWeight));
 
             //Ввод в блоках
-            startup.FrameSystem_Add(new S_Block_Input());
+            startup.FrameSystem_Add(
+                System_New<S_Block_Input>(SystemWeight.SystemWeight));
             #endregion
 
             //Добавляем системы рендеринга
-            #region PreRender
-            //Управление обзорными панелями
-            startup.PreRenderSystem_Add(new S_OverviewPanel_Control());
-            #endregion
             #region Render
+            //Управление обзорными панелями
+            startup.RenderSystem_Add(
+                System_New<S_OverviewPanel_Control>(SystemWeight.PreSystemWeight));
+
             //Обновление обзорных панелей
-            startup.RenderSystem_Add(new S_OverviewPanel_Update());
-            #endregion
-            #region PostRender
+            startup.RenderSystem_Add(
+                System_New<S_OverviewPanel_Update>(SystemWeight.SystemWeight));
+
             //Обновление блоков
-            startup.PostRenderSystem_Add(new SMT_BlockList_PreUpdate());
-            startup.PostRenderSystem_Add(new S_Block_Update());
+            startup.RenderSystem_Add(
+                System_New<SMT_BlockList_PreUpdate>(SystemWeight.PostSystemWeight));
+            startup.RenderSystem_Add(
+                System_New<S_Block_Update>(SystemWeight.PostSystemWeight));
 
             //Очистка событий
-            startup.PostRenderSystem_Add(new S_Events_Clear());
+            startup.RenderSystem_Add(
+                System_New<S_Events_Clear>(SystemWeight.EndSystemWeight));
             #endregion
 
             //Добавляем потиковые системы
-            #region PostTick
+            #region Tick
             //Обновление панелей в окне игры в конце каждого тика
-            startup.PostTickSystem_Add(new S_GameWindow_TickUpdate());
+            startup.TickSystem_Add(
+                System_New<S_GameWindow_TickUpdate>(SystemWeight.PostSystemWeight));
             #endregion
         }
 

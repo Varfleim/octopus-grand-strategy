@@ -6,7 +6,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_GameWindow_TickUpdate : IProtoRunSystem
+    public class S_GameWindow_TickUpdate : GBB.VFSystem, IProtoRunSystem
     {
         [DI] A_UI uI_A;
 

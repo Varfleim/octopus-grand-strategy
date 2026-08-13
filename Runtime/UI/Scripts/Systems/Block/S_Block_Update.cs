@@ -8,7 +8,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Block_Update : IProtoRunSystem
+    public class S_Block_Update : GBB.VFSystem, IProtoRunSystem
     {
         [DI] A_UI uI_A;
 

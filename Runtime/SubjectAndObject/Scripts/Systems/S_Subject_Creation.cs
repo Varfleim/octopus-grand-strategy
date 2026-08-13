@@ -4,7 +4,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.SubjectAndObject
 {
-    public class S_Subject_Creation : IProtoInitSystem, IProtoRunSystem
+    public class S_Subject_Creation : GBB.VFSystem, IProtoInitSystem, IProtoRunSystem
     {
         [DI] A_SubjectAndObject subjectAndObject_A;
 

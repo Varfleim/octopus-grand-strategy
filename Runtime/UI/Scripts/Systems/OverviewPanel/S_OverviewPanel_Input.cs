@@ -5,7 +5,7 @@ using Leopotam.EcsProto.Unity.Ugui;
 
 namespace GS.UI
 {
-    public class S_OverviewPanel_Input : IProtoRunSystem
+    public class S_OverviewPanel_Input : GBB.VFSystem, IProtoRunSystem
     {
         [DI] UnityUguiAspect unityUgui_A;
         [DI] ProtoIt click_E_I = new(It.Inc<UnityUguiClickEvent>());

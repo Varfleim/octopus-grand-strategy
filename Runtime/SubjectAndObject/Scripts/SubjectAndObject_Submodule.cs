@@ -13,27 +13,31 @@ namespace GS.SubjectAndObject
         public override void Systems_Add(GameStartup startup)
         {
             //Добавляем системы инициализации
-            #region PreInit
+            #region Init
             //Создание объектов
-            startup.PreInitSystem_Add(new S_Object_Creation());
+            startup.InitSystem_Add(
+                System_New<S_Object_Creation>(SystemWeight.PreSystemWeight));
             //Создание субъектов
-            startup.PreInitSystem_Add(new S_Subject_Creation());
-            #endregion
-            #region PostInit
+            startup.InitSystem_Add(
+                System_New<S_Subject_Creation>(SystemWeight.PreSystemWeight));
+
             //Очистка событий
-            startup.PostInitSystem_Add(new S_Events_Clear());
+            startup.InitSystem_Add(
+                System_New<S_Events_Clear>(SystemWeight.EndSystemWeight));
             #endregion
 
             //Добавляем потиковые системы
-            #region PreTick
+            #region Tick
             //Создание объектов
-            startup.PreTickSystem_Add(new S_Object_Creation());
+            startup.TickSystem_Add(
+                System_New<S_Object_Creation>(SystemWeight.PreSystemWeight));
             //Создание субъектов
-            startup.PreTickSystem_Add(new S_Subject_Creation());
-            #endregion
-            #region PostTick
+            startup.TickSystem_Add(
+                System_New<S_Subject_Creation>(SystemWeight.PreSystemWeight));
+
             //Очистка событий
-            startup.PostTickSystem_Add(new S_Events_Clear());
+            startup.TickSystem_Add(
+                System_New<S_Events_Clear>(SystemWeight.EndSystemWeight));
             #endregion
         }
 

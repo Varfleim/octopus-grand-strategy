@@ -5,7 +5,7 @@ using Leopotam.EcsProto.Threads;
 
 namespace GS.UI
 {
-    public class SMT_BlockList_PreUpdate : IProtoRunSystem
+    public class SMT_BlockList_PreUpdate : GBB.VFSystem, IProtoRunSystem
     {
         [DI] A_UI uI_A;
 

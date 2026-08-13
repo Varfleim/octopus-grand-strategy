@@ -6,7 +6,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Block_Creation : IProtoInitSystem
+    public class S_Block_Creation : GBB.VFSystem, IProtoInitSystem
     {
         [DI] A_UI uI_A;
 

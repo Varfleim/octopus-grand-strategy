@@ -6,7 +6,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_OverviewPanel_Initialization : IProtoInitSystem
+    public class S_OverviewPanel_Initialization : GBB.VFSystem, IProtoInitSystem
     {
         [DI] UI_Data uI_Data;
 

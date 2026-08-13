@@ -4,7 +4,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Events_Clear : IProtoRunSystem
+    public class S_Events_Clear : GBB.VFSystem, IProtoRunSystem
     {
         [DI] A_UI uI_A;
 
