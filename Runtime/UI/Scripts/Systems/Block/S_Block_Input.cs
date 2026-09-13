@@ -1,5 +1,5 @@
 
-using UnityEngine;
+using UnityEngine.EventSystems;
 
 using Leopotam.EcsProto;
 using Leopotam.EcsProto.QoL;
@@ -7,7 +7,7 @@ using Leopotam.EcsProto.Unity.Ugui;
 
 namespace GS.UI
 {
-    public class S_Block_Input : GBB.VFSystem, IProtoRunSystem
+    internal class S_Block_Input : GBB.VFSystem, IProtoRunSystem
     {
         [DI] UnityUguiAspect unityUgui_A;
         [DI] ProtoIt click_E_I = new(It.Inc<UnityUguiClickEvent>());
@@ -34,13 +34,18 @@ namespace GS.UI
                 //Если название кнопки пусто
                 if(clickEvent.SenderName == "")
                 {
-                    //Если родительский объект - блок-список
-                    if(clickEvent.Sender.transform.parent.TryGetComponent(out UI_BlockList parentBlockList))
+                    //Если родительский объект - блок
+                    if(clickEvent.Sender.transform.parent.TryGetComponent(out UI_Block parentBlock))
                     {
-                        //Запрашиваем действие этого блока, указывая источник события
-                        BlockList_Action_R(
-                            parentBlockList.SelfEntity,
-                            clickEvent.Sender);
+                        //Если сообщающий объект - панель сущности
+                        if(clickEvent.Sender.TryGetComponent(out UI_BlockEntityPanel blockEntityPanel))
+                        {
+                            //Запрашиваем действие блока
+                            BlockEntityPanel_ClickAction_R(
+                                parentBlock.selfEntity,
+                                blockEntityPanel.selfEntity,
+                                clickEvent.Button);
+                        }
                     }
                 }
                 //Если
@@ -62,17 +67,18 @@ namespace GS.UI
             }
         }
 
-        void BlockList_Action_R(
-            ProtoEntity bEntity,
-            GameObject actionObject)
+        void BlockEntityPanel_ClickAction_R(
+            ProtoEntity blockEntity,
+            ProtoEntity bEPEntity,
+            PointerEventData.InputButton inputButton)
         {
-            //Создаём новую сущность и назначаем ей запрос действия блока-списка
-            ref R_BlockList_Action rComp = ref uI_A.bL_Action_R_P.NewEntity(out ProtoEntity rEntity);
+            //Создаём новую сущность и назначаем ей запрос действия клика блока
+            ref SR_BlockEntityPanel_ClickAction rComp = ref uI_A.bEP_ClickAction_SR_P.Add(bEPEntity);
 
             //Заполняем данные запроса
             rComp = new(
-                bEntity,
-                actionObject);
+                blockEntity,
+                inputButton);
         }
     }
 }

@@ -6,7 +6,7 @@ using Leopotam.EcsProto.QoL;
 
 namespace GS.UI
 {
-    public class S_Block_Creation : GBB.VFSystem, IProtoInitSystem
+    internal class S_Block_Creation : GBB.VFSystem, IProtoInitSystem
     {
         [DI] A_UI uI_A;
 
@@ -14,71 +14,64 @@ namespace GS.UI
 
         public void Init(IProtoSystems systems)
         {
-            //Создаём блоки-списки
-            BlockLists_Creation();
+            //Создаём блоки
+            Blocks_Creation();
         }
 
-        void BlockLists_Creation()
+        void Blocks_Creation()
         {
-            //Для каждого запроса создания блока-списка
-            foreach(ProtoEntity rEntity in uI_A.bL_Creation_SR_I)
+            //Для каждого запроса создания блока
+            foreach(ProtoEntity blockEntity in uI_A.block_Creation_SR_I)
             {
-                //Берём запрос
-                ref SR_BlockList_Creation rComp = ref uI_A.bL_Creation_SR_P.Get(rEntity);
-
                 //Создаём блок
-                BlockList_Creation(
-                    rEntity,
-                    ref rComp);
+                Block_Creation(blockEntity);
 
-                //Удаляем запрос
-                uI_A.bL_Creation_SR_P.Del(rEntity);
+                //Запрос передаётся дальше, переходя в модуль игры
             }
         }
 
-        void BlockList_Creation(
-            ProtoEntity blockEntity,
-            ref SR_BlockList_Creation rComp)
+        void Block_Creation(
+            ProtoEntity blockEntity)
         {
-            if(uI_Data.OP_GetByCode(rComp.parentPanelCode, out UIA_OverviewPanel parentOP))
+            //Берём запрос
+            ref SR_Block_Creation rComp = ref uI_A.block_Creation_SR_P.Get(blockEntity);
+
+            if (uI_Data.OP_GetByCode(rComp.parentPanelCode, out UIA_OverviewPanel parentOP))
             {
                 if(uI_Data.OSbp_GetByCode(rComp.parentSubpanelCode, out UIA_OverviewSubpanel parentOSbp))
                 {
                     if(uI_Data.OT_GetByCode(rComp.parentTabCode, out UIA_OverviewTab parentOT))
                     {
-                        //Назначаем сущности компонент блока-списка
-                        ref C_BlockList bL = ref uI_A.bL_P.Add(blockEntity);
+                        //Назначаем сущности компонент блока
+                        ref C_Block block = ref uI_A.block_P.Add(blockEntity);
 
                         //Заполняем основные данные блока
-                        bL = new(0);
+                        block = new(rComp.blockType);
 
-                        //Инстанциируем префаб блока и сразу заносим его во вкладку
-                        bL.selfPanel = Block_Instantiate(
-                            uI_Data.blockListPrefab,
-                            parentOT.layoutGroup.transform) as UI_BlockList;
+                        //Если список кэшированных панелей не пуст, то берём кэшированную
+                        if(UI_Block.cachedPanels.Count > 0)
+                        {
+                            block.selfPanel = UI_Block.cachedPanels[UI_Block.cachedPanels.Count - 1];
+                            UI_Block.cachedPanels.RemoveAt(UI_Block.cachedPanels.Count - 1);
+                        }
+                        //Иначе создаём новую панель
+                        else
+                        {
+                            block.selfPanel = GameObject.Instantiate(uI_Data.blockPanelPrefab);
+                        }
+
+                        //Прикрепляем панель ко вкладке и активируем
+                        block.selfPanel.transform.SetParent(parentOT.layoutGroup.transform);
+                        block.selfPanel.gameObject.SetActive(true);
 
                         //Сохраняем сущность блока
-                        bL.selfPanel.SelfEntity = blockEntity;
+                        block.selfPanel.selfEntity = blockEntity;
 
                         //Заносим сущность блока в список блоков вкладки
                         parentOT.blockEntities.Add(blockEntity);
                     }
                 }
             }
-        }
-
-        UIA_Block Block_Instantiate(
-            UIA_Block blockPrefab,
-            Transform parentTransform)
-        {
-            //Создаём префаб блока и сразу присоединяем его к переданной вкладке
-            UIA_Block blockPanel = GameObject.Instantiate(blockPrefab, parentTransform);
-
-            //Отображаем панель
-            blockPanel.gameObject.SetActive(true);
-
-            //Возвращаем панель
-            return blockPanel;
         }
     }
 }

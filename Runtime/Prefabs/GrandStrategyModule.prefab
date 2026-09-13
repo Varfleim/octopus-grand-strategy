@@ -94,9 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd6d5a91be88fd46a43abd02f311f5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  submodulePreSystemWeight: 1475
-  submoduleSystemWeight: 1500
-  submodulePostSystemWeight: 1525
   subjectAndObject_Data: {fileID: 6753037636701569340}
 --- !u!114 &6753037636701569340
 MonoBehaviour:
@@ -156,9 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cdffed6bfd433648b5205e8b411a756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  submodulePreSystemWeight: 7475
-  submoduleSystemWeight: 7500
-  submodulePostSystemWeight: 7525
   uI_Data: {fileID: 3386033266180643909}
   uIPrefabs_Data: {fileID: 6358532414802717061}
   uI_Core: {fileID: 0}
@@ -180,9 +174,13 @@ MonoBehaviour:
   lensPanel: {fileID: 0}
   oSbpsTemplateArray: []
   oTsTemplateArray: []
-  blockListPrefab: {fileID: 1216812501126620947, guid: 64d64099ae9ac4e49bc2c79b16558b36, type: 3}
-  blockListElementPanelPrefab: {fileID: 5727602518855951723, guid: 2e32239ce3e59b140a192a5cdc1c02b1, type: 3}
-  blockListElementValuePanelPrefab: {fileID: 1047703062987955673, guid: 2cd6e12a94780544db9a3f346752ea24, type: 3}
+  blockPanelPrefab: {fileID: 699880854729821216, guid: 64d64099ae9ac4e49bc2c79b16558b36, type: 3}
+  blockEntityPanelPrefab: {fileID: 5279022450826981694, guid: 776628c85fed9eb4591bee401f780b24, type: 3}
+  dLPPrefab: {fileID: 5737543060570477721, guid: 2cd6e12a94780544db9a3f346752ea24, type: 3}
+  blocks_TemplateArray: []
+  dataLabels_TemplateArray: []
+  blocksUpdatePerThreadCount: 1
+  dataLabelsUpdatePerThreadCount: 10
 --- !u!114 &6358532414802717061
 MonoBehaviour:
   m_ObjectHideFlags: 0

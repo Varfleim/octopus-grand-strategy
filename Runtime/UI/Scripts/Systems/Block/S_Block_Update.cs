@@ -6,205 +6,277 @@ using UnityEngine;
 using Leopotam.EcsProto;
 using Leopotam.EcsProto.QoL;
 
+using GBB;
+
 namespace GS.UI
 {
-    public class S_Block_Update : GBB.VFSystem, IProtoRunSystem
+    internal class S_Block_Update<TSortType> : VFSystem, IProtoRunSystem
+        where TSortType : notnull, IComparable<TSortType>
     {
         [DI] A_UI uI_A;
 
+        ProtoPool<C_Block_Entities<TSortType>> block_Entities_P;
+        [DI] ProtoIt block_Entities_Update_SR_I = new(It.Inc<C_Block, C_Block_Entities<TSortType>, SR_Block_Update>());
+
         [DI] UI_Data uI_Data;
+
+        public void SetType(
+            ProtoPool<C_Block_Entities<TSortType>> block_Entities_P)
+        {
+            this.block_Entities_P = block_Entities_P;
+        }
 
         public void Run()
         {
-            //Обновляем блоки-списки
-            BlockLists_Update();
+            //Обновляем блоки
+            Blocks_Update();
         }
 
-        void BlockLists_Update()
+        void Blocks_Update()
         {
-            //Для каждого запроса обновления блока-списка
-            foreach(ProtoEntity blockEntity in uI_A.bL_Update_SR_I)
+            //Для каждого блока с запросом обновления
+            foreach (ProtoEntity blockEntity in block_Entities_Update_SR_I)
             {
-                //Берём блок
-                ref C_BlockList bL = ref uI_A.bL_P.Get(blockEntity);
-
                 //Обновляем блок
-                BlockList_Update(ref bL);
-
-                uI_A.b_Update_SR_P.Del(blockEntity);
+                Block_Update(blockEntity);
             }
         }
 
-        void BlockList_Update(
-            ref C_BlockList bL)
+        void Block_Update(
+            ProtoEntity blockEntity)
         {
-            //Берём панель блока
-            UI_BlockList selfPanel = bL.selfPanel;
+            //Берём блок и список сущностей
+            ref C_Block block = ref uI_A.block_P.Get(blockEntity);
+            ref C_Block_Entities<TSortType> blockEntities = ref block_Entities_P.Get(blockEntity);
 
-            //Если количество панелей в списке меньше количества элементов
-            if(selfPanel.panels.Count < bL.currentElements.Count)
+            //Берём шаблон блока
+            ref readonly TD_Block blockTemplate = ref uI_Data.blocks_TemplateArray[block.selfType];
+
+            //Если количество панелей блока меньше количества сущностей
+            if (block.panelEntities.Count < blockEntities.displayedEntities.Length)
             {
-                //Для каждого недостающего элемента
-                for(int a = selfPanel.panels.Count; a < bL.currentElements.Count; a++)
+                //Для каждой недостающей сущности
+                for (int a = block.panelEntities.Count; a < blockEntities.displayedEntities.Length; a++)
                 {
-                    //Инстанциируем новую панель и заносим её в список
-                    selfPanel.panels.Add(BL_ElementPanel_Instantiate(selfPanel.layoutGroup.transform));
+                    //Создаём новую панель
+                    BEP_Creation(
+                        ref block, in blockTemplate);
                 }
             }
 
-            //Для каждого переданного элемента
-            for(int a = 0; a < bL.currentElements.Count; a++)
+            //Для каждой отображаемой сущности
+            for (int a = 0; a < blockEntities.displayedEntities.Length; a++)
             {
-                //Переносим данные в соответствующую панель
-                BL_ElementPanel_SetData(
-                    selfPanel.panels[a],
-                    bL.currentElements[a]);
+                //Запрашиваем обновление данных сущности
+                Entity_RequestDataUpdate(
+                    in blockTemplate,
+                    blockEntities.displayedEntities[a].entity);
             }
 
-            //Если количество элементов в списке меньше количества панелей
-            if (bL.currentElements.Count < selfPanel.panels.Count)
+            //Если количество отображаемых сущностей меньше количества панелей
+            if (blockEntities.displayedEntities.Length < block.panelEntities.Count)
             {
-                //Для каждого лишнего элемента в обратном порядке
-                for (int a = selfPanel.panels.Count - 1; a < bL.currentElements.Count; a--)
-                {
-                    //Кэшируем панель
-                    BL_ElementPanel_Cache(selfPanel.panels[a]);
-
-                    //Удаляем её из списка
-                    selfPanel.panels.RemoveAt(a);
-                }
-            }
-        }
-
-        UI_BlockList_ElementPanel BL_ElementPanel_Instantiate(
-            Transform parent)
-        {
-            //Создаём пустую переменную для панели
-            UI_BlockList_ElementPanel elementPanel;
-
-            //Если список кэшированных панелей не пуст, то берём кэшированную
-            if(UI_BlockList_ElementPanel.cachedPanels.Count > 0)
-            {
-                //Берём последнюю панель в списке и удаляем её из списка
-                elementPanel = UI_BlockList_ElementPanel.cachedPanels[UI_BlockList_ElementPanel.cachedPanels.Count - 1];
-                UI_BlockList_ElementPanel.cachedPanels.RemoveAt(UI_BlockList_ElementPanel.cachedPanels.Count - 1);
-            }
-            else
-            {
-                //Создаём новую панель
-                elementPanel = GameObject.Instantiate(uI_Data.blockListElementPanelPrefab);
-            }
-
-            //Прикрепляем панель к родителю и отображаем её
-            elementPanel.transform.SetParent(parent);
-            elementPanel.gameObject.SetActive(true);
-
-            //Возвращаем панель
-            return elementPanel;
-        }
-
-        void BL_ElementPanel_SetData(
-            UI_BlockList_ElementPanel elementPanel,
-            D_BlockList_Element element)
-        {
-            //Заносим данные элемента в панель
-            elementPanel.elementName.text = element.elementName;
-
-            elementPanel.elementEntity = element.elementEntity;
-
-            //Заносим параметры элемента
-
-            //Если количество панелей в списке меньше количества параметров
-            if(elementPanel.elementValues.Count < element.elementValues.Count)
-            {
-                //Для каждого недостающего элемента
-                for(int a = elementPanel.elementValues.Count; a < element.elementValues.Count; a++)
-                {
-                    //Инстанциируем новую панель и заносим её в список
-                    elementPanel.elementValues.Add(BL_ElementValuePanel_Instantiate(elementPanel.layoutGroup.transform));
-                }
-            }
-
-            //Для каждого параметра элемента
-            for(int a = 0; a < element.elementValues.Count; a++)
-            {
-                //Переносим данные в соответствующую панель
-                BL_ElementValuePanel_SetData(
-                    elementPanel.elementValues[a],
-                    element.elementValues[a]);
-            }
-
-            //Если количество параметров в списке меньше количества панелей
-            if(element.elementValues.Count < elementPanel.elementValues.Count)
-            {
-                //Для каждого лишнего элемента в обратном порядке
-                for (int a = elementPanel.elementValues.Count - 1; a < element.elementValues.Count; a--)
+                //Для каждой лишней панели в обратном порядке
+                for (int a = block.panelEntities.Count - 1; a < blockEntities.displayedEntities.Length; a--)
                 {
                     //Кэшируем панель
-                    BL_ElementValuePanel_Cache(elementPanel.elementValues[a]);
-
-                    //Удаляем её из списка
-                    elementPanel.elementValues.RemoveAt(a);
+                    BEP_Destroy(
+                        ref block,
+                        block.panelEntities[a]);
                 }
             }
         }
 
-        void BL_ElementPanel_Cache(
-            UI_BlockList_ElementPanel elementPanel)
+        void BEP_Creation(
+            ref C_Block parentBlock, in TD_Block blockTemplate)
         {
-            //Заносим панель в список кэшированных
-            UI_BlockList_ElementPanel.cachedPanels.Add(elementPanel);
+            //Создаём новую сущность и назначаем ей компонент панели сущности
+            ref C_BlockEntityPanel bEP = ref uI_A.bEP_P.NewEntity(out ProtoEntity bEPEntity);
 
-            //Открепляем её от родителя и скрываем
-            elementPanel.transform.SetParent(null);
-            elementPanel.gameObject.SetActive(false);
-        }
+            //Заносим панель в список блока
+            parentBlock.panelEntities.Add(bEPEntity);
 
-        UI_BlockList_ElementValuePanel BL_ElementValuePanel_Instantiate(
-            Transform parent)
-        {
-            //Создаём пустую переменную для панели
-            UI_BlockList_ElementValuePanel elementValuePanel;
+            //Заполняем основные данные панели
+            bEP = new(0);
 
-            //Если список кэшированных панелей не пуст, то берём кэшированную
-            if(UI_BlockList_ElementValuePanel.cachedPanels.Count > 0)
+            //Если список кэшированных панелей не пуст, берём кэшированную
+            if (UI_BlockEntityPanel.cachedPanels.Count > 0)
             {
-                //Берём последнюю панель в списке и удаляем её из списка
-                elementValuePanel = UI_BlockList_ElementValuePanel.cachedPanels[UI_BlockList_ElementValuePanel.cachedPanels.Count - 1];
-                UI_BlockList_ElementValuePanel.cachedPanels.RemoveAt(UI_BlockList_ElementValuePanel.cachedPanels.Count - 1);
+                bEP.selfPanel = UI_BlockEntityPanel.cachedPanels[UI_BlockEntityPanel.cachedPanels.Count - 1];
+                UI_BlockEntityPanel.cachedPanels.RemoveAt(UI_BlockEntityPanel.cachedPanels.Count - 1);
             }
+            //Иначе создаём новую панель
             else
             {
-                //Создаём новую панель
-                elementValuePanel = GameObject.Instantiate(uI_Data.blockListElementValuePanelPrefab);
+                bEP.selfPanel = GameObject.Instantiate(uI_Data.blockEntityPanelPrefab);
             }
 
-            //Прикрепляем панель к родителю и отображаем её
-            elementValuePanel.transform.SetParent(parent);
-            elementValuePanel.gameObject.SetActive(true);
+            //Прикрепляем панель к блоку и отображаем
+            bEP.selfPanel.transform.SetParent(parentBlock.selfPanel.transform);
+            bEP.selfPanel.gameObject.SetActive(true);
 
-            //Возвращаем панель
-            return elementValuePanel;
+            //Сохраняем сущность панели
+            bEP.selfPanel.selfEntity = bEPEntity;
+
+            //Создаём массив панелей граф
+            bEP.dLPanels = new UI_DataLabelPanel[blockTemplate.dataTypeIndexes.Length];
+
+            //Для каждой графы в шаблоне
+            for (int a = 0; a < blockTemplate.dataTypeIndexes.Length; a++)
+            {
+                //Берём шаблон графы
+                ref readonly TD_DataLabel dLTemplate 
+                    = ref uI_Data.dataLabels_TemplateArray[blockTemplate.dataTypeIndexes[a]];
+
+                //Создаём новую панель графы
+                bEP.dLPanels[a] = DLPanel_Creation(
+                    ref bEP,
+                    in dLTemplate);
+                bEP.dLPanels[a].dataName.text = dLTemplate.dataTypeCode;
+            }
         }
 
-        void BL_ElementValuePanel_SetData(
-            UI_BlockList_ElementValuePanel elementValuePanel,
-            Tuple<int, float> value)
+        UI_DataLabelPanel DLPanel_Creation(
+            ref C_BlockEntityPanel parentBEP,
+            in TD_DataLabel dLTemplate)
         {
-            //Заносим данные в панель
-            elementValuePanel.valueName.text = value.Item1.ToString();
-            elementValuePanel.value.text = value.Item2.ToString();
+            //Получаем новую панель
+            UI_DataLabelPanel dLPanel;
+
+            //Если список кэшированных панелей не пуст, берём кэшированную
+            if (UI_DataLabelPanel.cachedPanels.Count > 0)
+            {
+                dLPanel = UI_DataLabelPanel.cachedPanels[UI_DataLabelPanel.cachedPanels.Count - 1];
+                UI_DataLabelPanel.cachedPanels.RemoveAt(UI_DataLabelPanel.cachedPanels.Count - 1);
+            }
+            //Иначе создаём новую панель
+            else
+            {
+                dLPanel = GameObject.Instantiate(uI_Data.dLPPrefab);
+            }
+
+            //Прикрепляем панель графы к панели сущности и отображаем
+            dLPanel.transform.SetParent(parentBEP.selfPanel.layoutGroup.transform);
+            dLPanel.gameObject.SetActive(true);
+
+            return dLPanel;
         }
 
-        void BL_ElementValuePanel_Cache(
-            UI_BlockList_ElementValuePanel elementValuePanel)
+        void Entity_RequestDataUpdate(
+            in TD_Block blockTemplate,
+            ProtoEntity displayedEntity)
         {
+            //Получаем хранилище данных сущности
+            ref C_DataLabel_Container eDC = ref uI_A.dLC_P.GetOrAdd(displayedEntity, out bool added);
+
+            //Если компонент был добавлен, заполняем его основные данные
+            if (added)
+            {
+                eDC = new(0);
+            }
+
+            //Для каждой графы в шаблоне
+            for (int a = 0; a < blockTemplate.dataTypeIndexes.Length; a++)
+            {
+                //Запрашиваем обновление данных
+                DL_RequestUpdate(
+                    displayedEntity, ref eDC,
+                    blockTemplate.dataTypeIndexes[a]);
+            }
+        }
+
+        void DL_RequestUpdate(
+            ProtoEntity displayedEntity, ref C_DataLabel_Container eDC,
+            int dataTypeIndex)
+        {
+            //Если у сущности ещё нет графы данного типа
+            if (eDC.dataLabelEntities.ContainsKey(dataTypeIndex) == false)
+            {
+                //Создаём графу и получаем её сущность
+                ProtoEntity dLEntity = DL_EntityCreation(
+                    dataTypeIndex,
+                    displayedEntity);
+
+                //Заносим графу в хранилище
+                eDC.dataLabelEntities.Add(
+                    dataTypeIndex,
+                    dLEntity);
+
+                //Запрашиваем досоздание графы
+                ref SR_DataLabel_Creation creationRComp = ref uI_A.dL_Creation_SR_P.Add(dLEntity);
+                creationRComp = new(dataTypeIndex);
+            }
+
+            //Запрашиваем обновление графы
+            ref SR_DataLabel_Update rComp = ref uI_A.dL_Update_SR_P.GetOrAdd(eDC.dataLabelEntities[dataTypeIndex]);
+        }
+
+        ProtoEntity DL_EntityCreation(
+            int dataTypeIndex,
+            ProtoEntity displayedEntity)
+        {
+            //Берём шаблон графы
+            ref readonly TD_DataLabel dLTemplate
+                = ref uI_Data.dataLabels_TemplateArray[dataTypeIndex];
+
+            //Создаём новую сущность и назначаем ей главный компонент графы
+            ref C_DataLabel dL = ref uI_A.dL_P.NewEntity(out ProtoEntity dLEntity);
+            dL = new(displayedEntity);
+
+            //Назначаем ей компонент-хранилище соответственно типу данных
+            if(dLTemplate.dataType == DataType.Integer)
+            {
+                ref C_DataLabel_Value<int> dLInt = ref uI_A.dL_Int_P.Add(dLEntity);
+            }
+            else if(dLTemplate.dataType == DataType.Float)
+            {
+                ref C_DataLabel_Value<float> dLFloat = ref uI_A.dL_Float_P.Add(dLEntity);
+            }
+            else if(dLTemplate.dataType == DataType.String)
+            {
+                ref C_DataLabel_Value<string> dLString = ref uI_A.dL_String_P.Add(dLEntity);
+            }
+
+            return dLEntity;
+        }
+
+        void BEP_Destroy(
+            ref C_Block parentBlock,
+            ProtoEntity bEPEntity)
+        {
+            //Берём компонент панели
+            ref C_BlockEntityPanel bEP = ref uI_A.bEP_P.Get(bEPEntity);
+
+            //Удаляем панель из списка блока
+            parentBlock.panelEntities.RemoveAt(parentBlock.panelEntities.Count - 1);
+
             //Заносим панель в список кэшированных
-            UI_BlockList_ElementValuePanel.cachedPanels.Add(elementValuePanel);
+            UI_BlockEntityPanel.cachedPanels.Add(bEP.selfPanel);
 
             //Открепляем её от родителя и скрываем
-            elementValuePanel.transform.SetParent(null);
-            elementValuePanel.gameObject.SetActive(false);
+            bEP.selfPanel.transform.SetParent(null);
+            bEP.selfPanel.gameObject.SetActive(false);
+
+            //Для каждой панели графы
+            for (int a = 0; a < bEP.dLPanels.Length; a++)
+            {
+                //Удаляем панель графы
+                DLPanel_Destroy(bEP.dLPanels[a]);
+            }
+
+            //Удаляем компонент панели
+            uI_A.bEP_P.Del(bEPEntity);
+        }
+
+        void DLPanel_Destroy(
+            UI_DataLabelPanel dLPanel)
+        {
+            //Заносим панель в список кэшированных
+            UI_DataLabelPanel.cachedPanels.Add(dLPanel);
+
+            //Открепляем её от родителя и скрываем
+            dLPanel.transform.SetParent(null);
+            dLPanel.gameObject.SetActive(false);
         }
     }
 }

@@ -15,11 +15,11 @@ namespace GS.UI
         [SerializeField]
         internal Dictionary<int, UIA_OverviewPanel> oPsIndexToObjectDict = new();
         [SerializeField]
-        public UI_MainOverviewPanel mainOverviewPanel;
+        internal UI_MainOverviewPanel mainOverviewPanel;
         [SerializeField]
-        public UI_OutlinerPanel outlinerPanel;
+        internal UI_OutlinerPanel outlinerPanel;
         [SerializeField]
-        public UI_LensPanel lensPanel;
+        internal UI_LensPanel lensPanel;
 
         internal bool OP_GetByCode(
             string panelCode, out UIA_OverviewPanel oP)
@@ -94,11 +94,37 @@ namespace GS.UI
         }
         #endregion
 
+        #region Blocks
         [SerializeField]
-        public UI_BlockList blockListPrefab;
+        internal UI_Block blockPanelPrefab;
         [SerializeField]
-        public UI_BlockList_ElementPanel blockListElementPanelPrefab;
+        internal UI_BlockEntityPanel blockEntityPanelPrefab;
         [SerializeField]
-        public UI_BlockList_ElementValuePanel blockListElementValuePanelPrefab;
+        internal UI_DataLabelPanel dLPPrefab;
+
+        [SerializeField]
+        public TD_Block[] blocks_TemplateArray;
+        [SerializeField]
+        internal TD_DataLabel[] dataLabels_TemplateArray;
+
+        public int BlocksUpdatePerThreadCount
+        {
+            get
+            {
+                return blocksUpdatePerThreadCount;
+            }
+        }
+        [SerializeField]
+        private int blocksUpdatePerThreadCount;
+        public int DataLabelsUpdatePerThreadCount
+        {
+            get
+            {
+                return dataLabelsUpdatePerThreadCount;
+            }
+        }
+        [SerializeField]
+        private int dataLabelsUpdatePerThreadCount;
+        #endregion
     }
 }

@@ -15,28 +15,28 @@ namespace GS.SubjectAndObject
             //Добавляем системы инициализации
             #region Init
             //Создание объектов
-            startup.InitSystem_Add(
+            startup.InitSystems_Add(
                 System_New<S_Object_Creation>(SystemWeight.PreSystemWeight));
             //Создание субъектов
-            startup.InitSystem_Add(
+            startup.InitSystems_Add(
                 System_New<S_Subject_Creation>(SystemWeight.PreSystemWeight));
 
             //Очистка событий
-            startup.InitSystem_Add(
+            startup.InitSystems_Add(
                 System_New<S_Events_Clear>(SystemWeight.EndSystemWeight));
             #endregion
 
             //Добавляем потиковые системы
             #region Tick
             //Создание объектов
-            startup.TickSystem_Add(
+            startup.TickSystems_Add(
                 System_New<S_Object_Creation>(SystemWeight.PreSystemWeight));
             //Создание субъектов
-            startup.TickSystem_Add(
+            startup.TickSystems_Add(
                 System_New<S_Subject_Creation>(SystemWeight.PreSystemWeight));
 
             //Очистка событий
-            startup.TickSystem_Add(
+            startup.TickSystems_Add(
                 System_New<S_Events_Clear>(SystemWeight.EndSystemWeight));
             #endregion
         }

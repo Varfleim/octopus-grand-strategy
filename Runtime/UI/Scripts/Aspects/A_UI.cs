@@ -6,6 +6,8 @@ namespace GS.UI
 {
     public class A_UI : ProtoAspectInject
     {
+        internal ProtoWorld world;
+
         public ProtoPool<R_OverviewPanel_Show> oP_Show_R_P;
         public ProtoIt oP_Show_R_I = new(It.Inc<R_OverviewPanel_Show>());
 
@@ -36,17 +38,37 @@ namespace GS.UI
         public ProtoPool<R_OverviewTab_Creation> oT_Creation_R_P;
         public ProtoIt oT_Creation_R_I = new(It.Inc<R_OverviewTab_Creation>());
 
-        public ProtoPool<SR_Block_Update> b_Update_SR_P;
+        #region Blocks
+        internal ProtoPool<C_Block> block_P;
+        public ProtoPool<C_Block_Entities<int>> block_Int_P;
+        public ProtoPool<C_Block_Entities<float>> block_Float_P;
+        public ProtoPool<C_Block_Entities<string>> block_String_P;
 
-        public ProtoPool<C_BlockList> bL_P;
+        internal ProtoPool<SR_Block_Creation> block_Creation_SR_P;
+        internal ProtoIt block_Creation_SR_I = new(It.Inc<SR_Block_Creation>());
 
-        public ProtoIt bL_Update_SR_I = new(It.Inc<C_BlockList, SR_Block_Update>());
+        internal ProtoPool<SR_Block_Update> block_Update_SR_P;
+        internal ProtoIt block_Update_SR_I = new(It.Inc<C_Block, SR_Block_Update>());
 
-        public ProtoPool<SR_BlockList_Creation> bL_Creation_SR_P;
-        public ProtoIt bL_Creation_SR_I = new(It.Inc<SR_BlockList_Creation>());
+        internal ProtoPool<C_BlockEntityPanel> bEP_P;
 
-        public ProtoPool<R_BlockList_Action> bL_Action_R_P;
-        public ProtoIt bL_Action_R_I = new(It.Inc<R_BlockList_Action>());
+        internal ProtoPool<SR_BlockEntityPanel_ClickAction> bEP_ClickAction_SR_P;
+        internal ProtoIt bEP_ClickAction_SR_I = new(It.Inc<C_BlockEntityPanel, SR_BlockEntityPanel_ClickAction>());
+
+        internal ProtoPool<C_DataLabel_Container> dLC_P;
+
+        public ProtoPool<C_DataLabel> dL_P;
+        public ProtoPool<C_DataLabel_Value<int>> dL_Int_P;
+        public ProtoPool<C_DataLabel_Value<float>> dL_Float_P;
+        public ProtoPool<C_DataLabel_Value<string>> dL_String_P;
+
+        internal ProtoPool<SR_DataLabel_Creation> dL_Creation_SR_P;
+        internal ProtoIt dL_Creation_SR_I = new(It.Inc<SR_DataLabel_Creation>());
+
+        public ProtoPool<SR_DataLabel_Update> dL_Update_SR_P;
+
+        internal ProtoPool<SR_DataLabel_Destroy> dL_Destroy_SR_P;
+        #endregion
 
         #region OverviewPanel
         public void OverviewP_Show_R(
@@ -167,33 +189,37 @@ namespace GS.UI
         }
         #endregion
 
-        #region BlockPanel
-        #region BlockList
-        public void Block_Update_SR(
-            ProtoEntity bEntity)
-        {
-            //Назначаем компонент запроса обновления, если его ещё нет
-            ref SR_Block_Update rComp = ref b_Update_SR_P.Add(bEntity);
-            rComp = new(0);
-        }
-
-        public ProtoEntity BlockList_Creation_SR(
+        #region Blocks
+        public void Block_Creation_SR(
             string parentPanelCode,
             string parentSubpanelCode,
-            string parentTabCode)
+            string parentTabCode,
+            int blockType)
         {
-            //Назначаем переданной сущности запрос создания блока-списка
-            ref SR_BlockList_Creation rComp = ref bL_Creation_SR_P.NewEntity(out ProtoEntity bEntity);
+            //Назначаем переданной сущности запрос создания блока
+            ref SR_Block_Creation rComp = ref block_Creation_SR_P.NewEntity();
 
             //Заполняем данные запроса
             rComp = new(
-                parentPanelCode,
-                parentSubpanelCode,
-                parentTabCode);
-
-            return bEntity;
+                parentPanelCode, parentSubpanelCode, parentTabCode,
+                blockType);
         }
-        #endregion
+
+        public void Block_InterlayerComponentCreation<T>(
+            ProtoEntity blockEntity,
+            ProtoPool<T> interlayerComponent_P) where T : struct
+        {
+            //Назначаем сущности компонент соответствующего типа
+            ref T interlayerComponent = ref interlayerComponent_P.Add(blockEntity);
+        }
+
+        public void DL_InterlayerComponentCreation<T>(
+            ProtoEntity dLEntity,
+            ProtoPool<T> interlayerComponent_P) where T : struct
+        {
+            //Назначаем сущности компонент соответствующего типа
+            ref T interlayerComponent = ref interlayerComponent_P.Add(dLEntity);
+        }
         #endregion
     }
 }
